@@ -14,13 +14,21 @@
   <style>
     body {
       padding-top: 54px;
+     
     }
-    .form-group {
-      text-align: left;
-  }
+  .div-left{width:300px;height:50px;float:left;text-align:left;} 
   img.img-responsive {
-    height: 400px;
+    
   }
+  img {  
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    height: auto;
+}
+a{
+	margin: 10px;
+}
     @media (min-width: 992px) {
       body {
         padding-top: 56px;
@@ -30,29 +38,43 @@
         padding: 1em;
         text-align: left;
     }
-    
   </style>
 
 </head>
 
-<body>
-    
-  
-        
+<body>     
   <div class="container">
     <div class="row">
       <div class="col-lg-12 text-center">
         <h1 class="mt-5">出差登記</h1> 
-        <div class="col-xs-12 text-center"><a href="./車輛狀況.html">車輛使用狀況表</a></div>
-        <hr>   
-        <hr>
+        
+       <a  href="./車輛狀況.html">車輛使用修改</a>
+       <a href="./車輛備註更改.html">車輛備註更改</a>
+        <br> 
+        <div>
         <ul class="list-unstyled">
-            
             <li class="col-xs-6">
-                <img height="300" width="400" src="./img/由於.jfif" alt="" id="image">
+                <img   src="./images/HINO.jpg" alt="" id="image">
                 <br>
-                <label >車型</label>
-                <select name="number" class="select form-control" data-price="50" data-name="鹹酥雞"  id="dd">
+                <br>
+                <div id="carNote">
+                保養里程:
+                <label > </label>
+                <br>
+                備註:
+                <label > </label>
+                <br>
+                目前狀況:
+                <label > </label>
+                </div>                
+            </li>
+        </ul>           
+        </div>
+      
+        <div class="div-left" >
+        <label >車型</label>
+                <br>
+                <select name="number"  data-price="50" data-name="鹹酥雞"  id="dd">
                    <!-- sheet1項目 -->
                 </select>
 <!--                <select name="number" class="select form-control" data-price="50" data-name="鹹酥雞"  id="sel">
@@ -60,47 +82,42 @@
                     <option value="CROSS">CROSS</option>
                     <option value="HINO">HINO</option>
                     </select>-->
-                <br>  
-            </li>
-            <li>
-            <!-- Page Content -->
-            <button type="button" >備註更改</button>
-            <br>
-            保養里程
-            <input type="text"  placeholder="80000">
-            <br>
-            備註
-            <input type="text"  placeholder="3月">
-            <br>
-            目前狀況:
-            <label > "出差中"</label>   
-        </li>
-        </ul>
-        <div class="form-group col-xs-10">
+        </div>                
+        <div class="div-left" >
             <label for="pwd">出差時間</label>
+            <br>
             <input type="time" name="usr_time" id="time">
         </div>
-        <div class="form-group col-xs-8">
+        <div class="div-left">
           <label for="pwd">使用者</label>
-          <input type="text" class="form-control" id="name">
+          <br>
+          <input type="text"  id="name">
         </div>
-        <div class="form-group col-xs-8">
+        <div class="div-left">
           <label for="pwd">電話</label>
-          <input type="number" class="form-control" id="phone">
+          <br>
+          <input type="number"  id="phone">
         </div>
-        <div class="form-group col-xs-8">
+        <div class="div-left">
           <label for="pwd">出差地</label>
-          <input type="text" class="form-control" id="location">
+          <br>
+          <input type="text"  id="location">
         </div>
-        <div class="form-group col-xs-8">  
+        <div class="div-left">  
           <label for="pwd">同行者</label>
-          <input type="text" class="form-control" id="together">
-        </div>      
-        <!--控制向連動-->
-      </div>
-        <button type="button" id="sendOrder" class="btn btn-primary col-xs-5">預約</button>
+          <br>
+          <input type="text"  id="together">
+        </div>  
+        
+      </div>   
+        
     </div>
+      <br>
+        <div class="div-left">
+        <button type="button" id="sendOrder" class="btn btn-primary col-xs-5">預約</button>
+        </div>
   </div>
+    
   <hr>
   
 
@@ -108,8 +125,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <!--  車型下拉式-->
-  <script>
-      
+  <script> 
     //select資料讀取   
      var selectdata = {
         'action': 'selection'
@@ -118,7 +134,7 @@
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbzGKyYx8yriAr4vRpJ902mL8J5L20_RSS8QdhCVF3zgh6_ZEu9k27-Y42Bx32Cd8_PKJg/exec",
+    url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
@@ -134,11 +150,6 @@
     });
     }
     
-     $('#dd').change(function(){
-      let sltValue=$(this).val();
-        console.log(sltValue);    
-      });
-      
       $(function(){
       //全部選擇隱藏
       $('div[id =""]').hide();
@@ -154,26 +165,51 @@
       switch ($(this).val()){
       default:
       case 'SIENTA-RCT': 
-      var flag = "./images/SIENTA-RCT.jfif";
+      var flag = "./images/SIENTA-RCT.jpg";
       $("#image").attr("src",flag);
-      $('#CarTitle').text('4月');
-      $('#CarTitle1').text('111200');
       $("#sel2 option").remove();
       break;
       
       case 'CROSS': 
       var flag = "./images/CROSS.jpg";
       $("#image").attr("src",flag);
-      $('#CarTitle').text('3月');
-      $('#CarTitle1').text('45000');
       break;
-      
-      
+       
       case "HINO": 
       var flag = "./images/HINO.jpg";
       $("#image").attr("src",flag);
+      $("#sel2 option").remove();    
+      break;
+
+      case "SIENTA-RDC": 
+      var flag = "./images/SIENTA-RDC.jpg";
+      $("#image").attr("src",flag);
+      $("#sel2 option").remove();    
+      break;
+           
+      case "YARIS": 
+      var flag = "./images/YARIS.jpg";
+      $("#image").attr("src",flag);
+      $("#sel2 option").remove();    
+      break;
+ 
+      case "CAMRY-2.5": 
+      var flag = "./images/CAMRY-2.5.jpeg";
+      $("#image").attr("src",flag);
+      $("#sel2 option").remove();    
+      break;
+
+      case "ALTIS-RDR": 
+      var flag = "./images/ALTIS-RDR.jpg";
+      $("#image").attr("src",flag);
+      $("#sel2 option").remove();    
+      break;
+
+      case "ALTIS-RDG": 
+      var flag = "./images/ALTIS-RDG.jpg";
+      $("#image").attr("src",flag);
       $('#CarTitle').text('3月');
-      $('#CarTitle1').text('80000');
+      $('#carFettle').text('80000');
       $("#sel2 option").remove();    
       break;
       }
@@ -181,6 +217,8 @@
       
   </script>
   <script>
+      
+     //把資料set到試算表
      $(function(){
         $('#sendOrder').click(function(e){
         var status = true;
@@ -189,34 +227,47 @@
         var time = $('#time').val(); 
         var location = $('#location').val(); 
         var together = $('#together').val();    
+        var fs = $('#carFettle').text();
+        var a = $('#carFettle').text();
+            var b=String(a);
+            var c=String(' 可使用');
+            
         var order = '';
-        
-        
         $('input').focus(function(){
           $(this).css('border','');
         });
-        $('.select').each(function(index) {
+        $('#dd').each(function(index) {
           if($(this).val() !== ''){
             order += $(this).val();       
           }
         });
-
+        if(time == ''){
+          $('#time').css('border','1px solid #ff0000');
+          status = false;
+        }
         if(name == ''){
           $('#name').css('border','1px solid #ff0000');
           status = false;
         }
-
-        if(order == ''){
-          alert('請選擇訂購品項喔');
+        if(location == ''){
+          $('#location').css('border','1px solid #ff0000');
           status = false;
         }
+       
+         if(b == c){
+                console.log('true')
+            }else
+            {   
+                alert('車輛出差中');
+                console.log('false')
+                status = false;
+            }
         if(status){
           var currentdate = new Date();
           var filltime = currentdate.getFullYear() + "/"
                 + (currentdate.getMonth() + 1) + "/"
                 + currentdate.getDate() + "  "
                 + time
-
           var data = {
             'name' : name,
             'phone':phone,
@@ -228,20 +279,76 @@
           }
           send(data);
         }
+        
       });
     });
     function send(data){
       $.ajax({
         type: "get",
-        url: "https://script.google.com/macros/s/AKfycbzGKyYx8yriAr4vRpJ902mL8J5L20_RSS8QdhCVF3zgh6_ZEu9k27-Y42Bx32Cd8_PKJg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
+            alert('登記車輛');
+          window.location.reload();  
           console.log(response);
-          alert('登記車輛');
         }
       });
     }
+    
+    //載入網站帶入HINO資料
+    $(function(){
+        var notedata = {
+            'noteCar': 'HINO',
+            'action': 'noteSelection'    
+        }
+        sendNoteData(notedata)
+      });
+
+    
+    //select後里程數狀況更新
+    $(function(){
+        $("#dd").change(function(e){
+        var status = true;  
+        order = $(this).val();       
+        var notedata = {
+            'noteCar': order,
+            'action': 'noteSelection'    
+        }
+        sendNoteData(notedata)
+      });
+    });
+    
+    //備註資料代入
+    function sendNoteData(data){
+      $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function (response) {
+            var content = '';
+            response.forEach(element => {
+            var [car,mileage,month,fettle] = element.data;
+            content +=
+            `
+            保養里程:
+                <label > ${mileage}</label>
+                <br>
+            備註:
+                <label > ${month}</label>
+                <br>
+            目前狀況:
+                <label id = "carFettle"> ${fettle}</label>
+            `
+            })
+            var dataView = document.getElementById('carNote');
+            dataView.innerHTML = content;
+            }
+        });
+    }
+    
   </script>
 </body>
 </html>
