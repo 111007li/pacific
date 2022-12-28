@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <script src="jq/jquery-3.6.1.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>出差登記</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <style>
+    body {
+      padding-top: 54px;
+     
+    }
+  .div-left{width:300px;height:50px;float:left;text-align:left;} 
+  img.img-responsive {
+    
+  }
+  img {  
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    height: auto;
+}
+a{
+	margin: 10px;
+}
+    @media (min-width: 992px) {
+      body {
+        padding-top: 56px;
+      }
+    }
+    li{
+        padding: 1em;
+        text-align: left;
+    }
+    
+.wrap{ /*父元素*/
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+.left{
+
+    width: 70%;
+    height: 70%px;
+}
+.right{
+ 
+    width: 50%;
+    height: 70%px;
+}
+  </style>
+
+</head>
+
+<body>    
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h1 class="mt-5">備註更改</h1> 
+        
+       <a  href="./出差登記.html">出差登記</a>
+       <a  href="./出差修改.html">出差修改</a>
+<hr>  
+
+<div class="wrap"><!--父元素-->
+    <div class="left">
+        <div style="text-align:left;" class="form-group col-xs-7">
+            <table border="1" width="140%"  style="border-collapse:collapse" >
+                <thead>
+                    <tr>
+                        <th width="40%">車型</th>
+                        <th width="30%">里程數</th>
+                        <th width="20%">備註</th>
+                        <th width="20%"></th>
+                    </tr>
+                </thead>
+                <tbody id="carNowView">
+                    <!-- 目前車況 -->
+                </tbody>
+            </table>
+        </div>   
+    </div>
+    <div class="right">
+        <div style="text-align:left;" class="form-group col-xs-6" id="note1">
+            <div>
+                <label >車型</label>
+                <br>
+                <input type="text" id="car">
+            </div>                
+            <div  >
+                <label for="pwd">里程數</label>
+                <br>
+                <input type="text" id="milage">
+            </div>
+            <div >
+                <label for="pwd">備註</label>
+                <br>
+                <input type="text"  id="note">
+            </div>
+            <br>
+            <button type="button" id="create" >新增</button>
+        </div>
+    </div>
+</div><!--wrap-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+    //車輛狀況帶出  
+    var cdata = {
+        'action': 'carNow'
+        }
+    carNow(cdata);   
+    function carNow(data){
+    $.ajax({
+    type: "post",
+    url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+    data: data,
+    dataType: "JSON",
+    success: function(response) { 
+    var content = '';
+    response.forEach(element => {
+    var [car,milage,note] = element.data;
+    var index = element.index;
+    content +=
+    `
+    <tr>
+    <td > ${car} </td>
+    <td > ${milage} </td>
+    <td > ${note} </td>
+    <td > <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
+    </tr>
+    `
+    })
+    var dataView = document.getElementById('carNowView');
+    dataView.innerHTML = content;  
+    }
+    });
+    }  
+    
+     //點選修改帶出資料  
+    function updateNoteData(index, that){
+      var data = {
+        action: 'changeNote',
+        index: index-1,
+      };
+      $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function(response) { 
+        var content = '';
+        response.forEach(element => {
+        var [car,milage,note] = element.data;
+        var index = element.index;
+        content +=
+        `
+        <input type=hidden id="changeindex" value=${index} >
+        <div>
+                <label >車型</label>
+                <br>
+                <input type="text" id="changecar" value=${car} >
+            </div>                
+            <div  >
+                <label for="pwd">里程數</label>
+                <br>
+                <input type="text" id="changemilage" value=${milage}>
+            </div>
+            <div >
+                <label for="pwd">備註</label>
+                <br>
+                <input type="text"  id="changenote" value=${note}>
+            </div>
+            <br>
+            <button type="button" id="revise" >修改</button>
+            <button type="button" id="delete" >刪除</button>
+            <button type="button" id="cancel" >取消</button>
+            <p class='show'></p>
+        </div>
+        `
+        })
+        var dataView = document.getElementById('note1');
+        dataView.innerHTML = content; 
+        
+        //刪除備註
+        var showtxt = document.querySelector('.show');
+        $(function(){ 
+        $('#delete').click(function(e) {
+            //window.confirm('ConfirmBox測試成功嗎');
+            if (confirm('確定刪除備註') == true) {
+                var index = $('#changeindex').val();
+                var note= $('#changenote').val();
+                var car = $('#changecar').val(); 
+                var milage = $('#changemilage').val();
+                console.log(index);
+                console.log(note);
+                console.log(car);
+                console.log(milage);
+                var data = {
+                    'index':index,
+                    'milage': milage,
+                    'note': note,   
+                    'car': car,  
+                    'action': 'deleteNote'
+                }      
+                deleteNote(data);
+                setTimeout(function(){window.location.reload();}, 2000);
+                //showtxt.innerHTML = '刪除備註';
+            } else {
+                alert('取消刪除');
+                //showtxt.innerHTML = '取消刪除';
+            }
+        });
+        });
+        function deleteNote(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function (response) {
+        if(response === 'success'){
+                alert('刪除成功');
+                } else {
+                alert('請輸入正確車型');
+                }
+                }
+        });
+        }
+
+        //修改備註
+        $(function() {
+            $('#revise').click(function(e) {
+                var status = true;
+                var index = $('#changeindex').val();
+                var note= $('#changenote').val();
+                var car = $('#changecar').val(); 
+                var milage = $('#changemilage').val();
+                console.log(index);
+                console.log(note);
+                console.log(car);
+                console.log(milage);
+                $('input').focus(function(){
+                    $(this).css('border','');
+                });
+                if(car == ''){
+                    $('#changecar').css('border','1px solid #ff0000');
+                    status = false;
+                }
+                if(status){
+                var data = {
+                    'index':index,
+                    'milage': milage,
+                    'note': note,   
+                    'car': car,  
+                    'action': 'resiveNote'
+                }      
+                updateNote(data)
+                setTimeout(function(){window.location.reload();}, 2000);
+                }
+            });
+            }); 
+            function updateNote(data){
+            $.ajax({
+            type: "post",
+            url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+            data: data,
+            async:false,
+            dataType: "JSON",
+            success: function (response) {
+            if(response === 'success'){
+                alert('修改成功');
+                } else {
+                alert('更新失敗');
+                }
+            }
+            });
+            }
+            $(function() {
+            $('#cancel').click(function(e) {    
+            window.location.reload()
+            });
+            });
+            
+        }
+        });
+      }   
+//新增
+$(function() {
+    $('#create').click(function(e) {   
+    var status = true;
+    var note= $('#note').val();
+    var car = $('#car').val(); 
+    var milage = $('#milage').val();
+   
+    console.log(note);
+    console.log(car);
+    console.log(milage);
+    $('input').focus(function(){
+    $(this).css('border','');
+    });
+    if(car == ''){
+    $('#car').css('border','1px solid #ff0000');
+    status = false;
+    }
+    if(status){
+    var data = {
+    'milage': milage,
+    'note': note,   
+    'car': car,  
+    'action': 'createNote'
+    }      
+    createNote(data)
+    setTimeout(function(){window.location.reload();}, 2000);
+    }
+    });
+ });     
+ function createNote(data){
+            $.ajax({
+            type: "post",
+            url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+            data: data,
+            async:false,
+            dataType: "JSON",
+            success: function (response) {
+            if(response === 'success'){
+                alert('新增成功');
+                } else {
+                alert('更新失敗');
+                }
+            }
+            });
+            }
+  </script>
+</body>
+</html>

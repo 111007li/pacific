@@ -16,6 +16,10 @@
             padding-top: 54px;
         }
         
+        a{
+	margin: 10px;
+        }
+    
         .form-group {
             text-align: left;
         }
@@ -54,8 +58,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <div class="container">
 <div class="row">
 <div class="col-lg-12 text-center">
-<h1 class="mt-5">車輛查詢</h1>
-<div class="col-xs-12 text-center"><a href="./出差登記.html">出差登記</a></div>
+<h1 class="mt-5">出差修改</h1>
+<a href="./出差登記.html">出差登記</a>
+<a href="./備註更改.html">備註更改</a>
 <hr>
 <div class="form-group col-xs-12">
 </div>  
@@ -83,9 +88,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </table>
     
 <div id="Revise" class="form-group col-xs-8">
-    <!-- AJAX資料show出來-->
+    <!-- show全部資料-->
 </div>
-
+    
 </div>
 </div>
 </div>
@@ -167,7 +172,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     function SendAllQuery(data){
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+       url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -187,7 +192,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -236,19 +241,39 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             ReviseEle+=
                             `   
                                 <hr>
-                                <div>
+                                <div style="text-align:left;" class="form-group col-xs-5">
+                                <table border="1" width="150"  style="border-collapse:collapse" >
+                                <thead>
+                                <tr>
+                                <th>車型</th>
+                                <th>狀況</th>
+                                </tr>
+                                </thead>
+                                <tbody id="carNowView">
+                                <!-- 目前車況 -->
+                                </tbody>
+                                </table>
+                                </div>
+                             
+                           <div style="text-align:left;" class="form-group col-xs-6">
+                                <div>  
                                 <input type=hidden id="changeindex" value=${index} >
                                 <br>
-                                <label >車型</label>
+                                車型
+                                <br>
                                 <input type="text" id="changecar" style="width:100px;" value=${car} disabled="disabled" >
                                 <select id="changeCarSelect"></select>  
                                 </div>  
                                 <br>
-                                姓名 
+                                人員 
                                 <input type="text" class="form-control" id="changename" value=${name} >
+                                <br>
+                                電話
+                                <input type="text" class="form-control" id="changephone" value=${phone} >
                                 <br>
                                 <div>
                                 時間 
+                                <br>
                                 <input type="time" name="usr_time" id="changetime" value=${new Date(time).format("hh:mm")}>
                                 </div>
                                 <br>
@@ -257,6 +282,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                 <br>
                                 同行者
                                 <input type="text" class="form-control" id="changetogether" value=${together} >
+                            </div>
+                            <div id="carNote"></div>
                             `
                             });
         if (content) {
@@ -269,6 +296,69 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         var RView = document.getElementById('Revise');
         RView.innerHTML = ReviseEle;
         
+        //#carNote代入車輛狀況資料
+        $(function(){
+        $("#changeCarSelect").change(function(e){
+        var status = true;  
+        order = $(this).val();       
+        var notedata = {
+        'noteCar': order,
+        'action': 'noteSelection'    
+        }
+        sendNoteData(notedata)
+        });
+        });
+        function sendNoteData(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function (response) {
+        var content = '';
+        response.forEach(element => {
+        var [car,mileage,month,fettle] = element.data;
+        content +=
+        `
+        <label style = "display:none" id = "carFettle"> ${fettle}</label>
+        `
+        })
+        var dataView = document.getElementById('carNote');
+        dataView.innerHTML = content;
+        }
+        });
+        }
+        
+        //車輛目前狀態表
+        var cdata = {
+        'action': 'carNow'
+        }
+        carNow(cdata);   
+        function carNow(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        data: data,
+        dataType: "JSON",
+        success: function(response) { 
+        var content = '';
+        response.forEach(element => {
+        var [car,,,fettle] = element.data;
+        content +=
+        `
+        <tr>
+        <td>${car}</td>
+        <td>${fettle}</td>
+        </tr>
+        `
+        })
+        var dataView = document.getElementById('carNowView');
+        dataView.innerHTML = content;
+        }
+        });
+        }  
+        
         //點完修改後的select選項
         var selectdata = {
                 'action': 'selection'
@@ -280,13 +370,19 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             $('#Rebtn').click(function(e) {
                 var status = true;
                 var index = $('#changeindex').val();
+                var phone= $('#changephone').val();
                 var car = $('#changecar').val(); 
                 var name = $('#changename').val(); 
                 var time = $('#changetime').val(); 
                 var location = $('#changelocation').val(); 
                 var together = $('#changetogether').val(); 
+                var a = $('#carFettle').text();
+                var b=String(a);
+                var c=String(' 可使用');
+                
                 console.log(index);
                 console.log(car);
+                console.log(phone);
                 console.log(name);
                 console.log(time);
                 console.log(location);
@@ -302,6 +398,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                     $('#changelocation').css('border','1px solid #ff0000');
                     status = false;
                 }
+                
+                if(b == c){
+                console.log('true')
+                }else
+                {   
+                alert('車輛出差中');
+                console.log('false')
+                status = false;
+                }
+                
                 if(status){
                 var currentdate = new Date();
                 var filltime = currentdate.getFullYear() + "/"
@@ -312,14 +418,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                 var data = {
                     'name': name,
                     'time': filltime,
+                    'phone':phone,
                     'car':car,
                     'location': location,
                     'together':together,
                     'index':index, 
                     'action': 'changeData'
                 }
-                    updateChangeData(data)
-                    window.location.reload();
+                    updateChangeData(data);
+                    setTimeout(function(){window.location.reload();}, 4000);
                 }
             });
         });
@@ -337,7 +444,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      function updateChangeData(data){
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -359,7 +466,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -376,7 +483,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -389,7 +496,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbwXMgQN5OEOJWBfVUUp84CIX2GVSxyellUIveULkIAeNEFjhCRXwR_VMa1lDgTKfsF7tw/exec",
+    url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
