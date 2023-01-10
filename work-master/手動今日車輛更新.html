@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <script src="jq/jquery-3.6.1.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>備註更改</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <style>
+    body {
+      padding-top: 54px;
+     
+    }
+  .div-left{width:300px;height:50px;float:left;text-align:left;} 
+
+  img {  
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    height: auto;
+}
+a{
+	margin: 10px;
+}
+    @media (min-width: 992px) {
+      body {
+        padding-top: 56px;
+      }
+    }
+    li{
+        padding: 1em;
+        text-align: left;
+    }
+    
+.wrap{ /*父元素*/
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+.left{
+
+    width: 60%;
+   
+}
+.right{
+ 
+    width: 40%;
+  
+}
+  </style>
+
+</head>
+
+<body>    
+  <h1>更新日期</h1>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+   
+    var cdata = {
+        'action': 'changeDay'
+        }
+    carNow(cdata);   
+    function carNow(data){
+    $.ajax({
+    type: "post",
+    url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
+    data: data,
+    dataType: "JSON",
+    success: function(response) { 
+    	if(response === 'success'){
+            console.log('換日完成');
+        } 
+    }
+    });
+    }  
+    
+  </script>
+</body>
+</html>

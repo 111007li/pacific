@@ -17,9 +17,7 @@
      
     }
   .div-left{width:300px;height:50px;float:left;text-align:left;} 
-  img.img-responsive {
-    
-  }
+ 
   img {  
     max-height: 100%;  
     max-width: 100%; 
@@ -48,53 +46,58 @@ a{
       <div class="col-lg-12 text-center">
         <h1 class="mt-5">出差登記</h1> 
         
-       <a  href="./出差修改.html">出差修改</a>
+       <a href="./出差修改.html">出差修改</a>
        <a href="./備註更改.html">備註更改</a>
+       <a href="./人員出勤.html">人員出勤</a>
 <hr>  
 
-<div style="text-align:left;" class="form-group col-xs-7">
-<table border="1" width="150"  style="border-collapse:collapse" >
-<thead>
-<tr>
-<th>車型</th>
-<th>狀況</th>
-</tr>
-</thead>
-<tbody id="carNowView">
-    <!-- 目前車況 -->
-</tbody>
-</table>
+<div style="text-align:left;" class="form-group col-xs-5">
+
 </div>
        
         <br> 
         <div>
         <ul  class="list-unstyled">
-            <li class="col-xs-6">
+            <li class="col-xs-5">
                 <img   src="./images/HINO.jpg" alt="" id="image">
                 <br>
                 <br>
                 <div id="carNote">
-                保養里程:
-                <label > </label>
-                <br>
-                備註:
-                <label > </label>
-                <br>
-                目前狀況:
-                <label > </label>
-                </div>                
-            </li>
+             
+                <br>   
+                </div>
+								<table border="1"   class="table table-striped"  
+									style="border-collapse: collapse">
+									<thead>
+										<tr>
+											<th width="100px">車型</th>
+											<th width="100px">狀況</th>
+										</tr>
+									</thead>
+									<tbody id="carStatusNowView">
+										<!-- 目前車況 -->
+									</tbody>
+								</table>
+			</li>
         </ul>           
         </div>
+        
+
+        <br>
         
         <div style="text-align:left;" class="form-group col-xs-6">
         <div class="div-left" >
         <label >車型</label>
                 <br>
                 <select name="number"  data-price="50" data-name="鹹酥雞"  id="dd">
-                   <!-- sheet1項目 -->
                 </select>
-        </div>                
+        </div>     
+        <div class="div-left" >
+            <label for="pwd">出差日期</label>
+            <br>
+            <input type="date" name="usr_date" id="date">
+            <button type="button" id="checkDate">查看登記狀況</button>
+        </div>    
         <div class="div-left" >
             <label for="pwd">出差時間</label>
             <br>
@@ -119,46 +122,26 @@ a{
           <label for="pwd">同行者</label>
           <br>
           <input type="text"  id="together">
-        </div>  
+        </div> 
+        <div class="div-left" >
+            <label for="pwd">預計回廠</label>
+            <br>
+            <input type="time" name="usr_time" id="cometime">  
+             <br>
+                          <br>
+            <button type="button" id="sendOrder" class="btn btn-primary col-xs-5">預約</button>
+        </div>     
       </div>   
     </div>
-        <button type="button" id="sendOrder" class="btn btn-primary col-xs-5">預約</button>
-        </div>
+     </div>
   </div>
   <hr>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <script> 
-    var cdata = {
-        'action': 'carNow'
-        }
-    carNow(cdata);   
-    function carNow(data){
-    $.ajax({
-    type: "post",
-    url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
-    data: data,
-    dataType: "JSON",
-    success: function(response) { 
-    var content = '';
-    response.forEach(element => {
-    var [car,,,fettle] = element.data;
-    content +=
-    `
-    <tr>
-    <td>${car}</td>
-    <td>${fettle}</td>
-    </tr>
-    `
-    })
-    var dataView = document.getElementById('carNowView');
-    dataView.innerHTML = content;
-    }
-    });
-    }  
-      
-    //select資料讀取   
+  <script>       
+  	
      var selectdata = {
         'action': 'selection'
         }
@@ -166,7 +149,7 @@ a{
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+    url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
@@ -182,99 +165,275 @@ a{
     });
     }
     
-      $(function(){
-      //全部選擇隱藏
-      $('div[id =""]').hide();
-      $('#sel').change(function(){
-      let sltValue=$(this).val();
-      console.log(sltValue);
-      //指定選擇顯示
-      $('div[id =""]').show();
-      });
-      });
-      
-      $("#dd").change(function(){
-      switch ($(this).val()){
-      default:
-      case 'SIENTA-RCT': 
-      var flag = "./images/SIENTA-RCT.jpg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();
-      break;
-      
-      case 'CROSS': 
-      var flag = "./images/CROSS.jpg";
-      $("#image").attr("src",flag);
-      break;
-       
-      case "HINO": 
-      var flag = "./images/HINO.jpg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();    
-      break;
+    $(function(){
+        $('div[id =""]').hide();
+        $('#sel').change(function(){
+        let sltValue=$(this).val();
+        console.log(sltValue);
+        $('div[id =""]').show();
+        });
+        });
+        
+        $("#dd").change(function(){
+        switch ($(this).val()){
+        default:
+        case 'SIENTA-RCT': 
+        var flag = "./images/SIENTA-RCT.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();
+        break;
+        
+        case 'CROSS': 
+        var flag = "./images/CROSS.jpg";
+        $("#image").attr("src",flag);
+        break;
+         
+        case "HINO": 
+        var flag = "./images/HINO.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
 
-      case "SIENTA-RDC": 
-      var flag = "./images/SIENTA-RDC.jpg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();    
-      break;
-           
-      case "YARIS": 
-      var flag = "./images/YARIS.jpg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();    
-      break;
- 
-      case "CAMRY-2.5": 
-      var flag = "./images/CAMRY-2.5.jpeg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();    
-      break;
+        case "SIENTA-RDC": 
+        var flag = "./images/SIENTA-RDC.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+             
+        case "YARIS": 
+        var flag = "./images/YARIS.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+   
+        case "CAMRY-2.5": 
+        var flag = "./images/CAMRY-2.5.jpeg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
 
-      case "ALTIS-RDR": 
-      var flag = "./images/ALTIS-RDR.jpg";
-      $("#image").attr("src",flag);
-      $("#sel2 option").remove();    
-      break;
+        case "ALTIS-RDR": 
+        var flag = "./images/ALTIS-RDR.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
 
-      case "ALTIS-RDG": 
-      var flag = "./images/ALTIS-RDG.jpg";
-      $("#image").attr("src",flag);
-      $('#CarTitle').text('3月');
-      $('#carFettle').text('80000');
-      $("#sel2 option").remove();    
-      break;
-      }
-      });
+        case "ALTIS-RDG": 
+        var flag = "./images/ALTIS-RDG.jpg";
+        $("#image").attr("src",flag);
+        $('#CarTitle').text('3月');
+        $('#carFettle').text('80000');
+        $("#sel2 option").remove();    
+        break;
+        }
+        });
       
   </script>
   <script>
-      
-     //把資料set到試算表
+  $(function(){
+      var notedata = {
+          'car': 'HINO',
+          'action': 'noteSelection'    
+      }
+      sendNoteData(notedata)
+    });
+  $(function(){
+      $("#dd").change(function(e){
+      var status = true;  
+      order = $(this).val();       
+      var notedata = {
+          'car': order,
+          'action': 'noteSelection'    
+      }
+      sendNoteData(notedata)
+    });
+  });
+  function sendNoteData(data){
+    $.ajax({
+      type: "post",
+      url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
+      data: data,
+      async:false,
+      dataType: "JSON",
+      success: function (response) {
+          var content = '';
+          response.forEach(element => {
+          var [car,mileage,month,fettle] = element.data;
+          content +=
+          `
+          
+          
+              <label style="font-size:18px;">保養里程: ${mileage}</label>
+              <br>
+          
+              <label style="font-size:18px;">備註: ${month}</label>
+              <br>  
+              <br>        
+          `
+          })
+          var dataView = document.getElementById('carNote');
+          dataView.innerHTML = content;
+          }
+      });
+  }
+  	
+ 	var cdata = {
+  			'action': 'carTodayStatus'
+	    }
+  	carTodayStatus(cdata);	
+  	 $(function(){
+       $('#checkDate').click(function(e){
+    	   var date = $('#date').val(); 
+    	   		var status = true;
+    	  		if(date == ''){
+    	          $('#date').css('border','1px solid #ff0000');
+    	          status = false;
+    	        }
+    	        newInputDate = new Date(date);
+    	        var nowDate = new Date();
+    	        nowDate = nowDate.setDate(nowDate.getDate()-1);
+    	        nowDate = new Date(nowDate);
+    	        var ndate = new Date();
+    	        ndate = ndate.setDate(ndate.getDate()+4);
+    	        ndate=new Date(ndate);
+    	        
+    	        var inputdate = new Date(date);
+    	        var todayDate = new Date();
+    	        adate = inputdate.getFullYear() + '-' + ( inputdate.getMonth() + 1) + '-' +  inputdate.getDate();
+    	        bdate = todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1) + '-' + todayDate.getDate();
+    	        
+    	        if(newInputDate  < nowDate)
+    	        {   
+    	            alert('請輸入正確日期');
+    	            status = false;  
+    	        }else if(newInputDate  > ndate){
+    	        	alert('請輸入五日內日期');
+    	        	status = false;
+    	        }
+    	     	if(status){ 
+    	     		
+    	        if(adate == bdate){
+    	        	
+    	        	var cdata = {
+    	        		'date':date,
+    	    	        'action': 'carTodayStatus'
+    	    	    }
+    	        	carTodayStatus(cdata);
+    	        }
+    	        if(adate !== bdate){
+    	        	var cdata = {
+        	        	'date':date,
+        	    	    'action': 'carDateStatus'
+        	    	}
+    	        	carDateStatus(cdata);
+    	        } 
+    	     	}
+    	    
+    	     	
+       });
+     });
+  	function carTodayStatus(data){
+	    $.ajax({
+	    type: "post",
+	    url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
+	    data: data,
+	    dataType: "JSON",
+	    success: function(response) { 
+	    var content = '';
+	    response.forEach(element => {
+	    var [car,,,fettle] = element.data;
+	    content +=
+	    `
+	    <tr>
+	    <td>${car}</td>
+	    <td>${fettle}</td>
+	    </tr>
+	    `
+	    })
+	    var dataView = document.getElementById('carStatusNowView');
+	    dataView.innerHTML = content;
+	    }
+	    });
+	}   	 
+  	function carDateStatus(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
+        data: data,
+        dataType: "JSON",
+        success: function(response) { 
+        if(response.length===0){alert('無登記車輛');}
+        var content = '';
+        response.forEach(element => {
+        var [car,,,,,,,,,fettle] = element.data;
+        content +=
+        `
+        <tr>
+        <td>${car}</td>
+        <td>${fettle}</td>
+        </tr>
+        `
+        })
+        var dataView = document.getElementById('carStatusNowView');
+        dataView.innerHTML = content;
+        }
+        });
+        }  
+  		
      $(function(){
         $('#sendOrder').click(function(e){
         var status = true;
         var name = $('#name').val();
-        var phone = $('#phone').val();   
+        var phone = $('#phone').val(); 
+        var date = $('#date').val(); 
         var time = $('#time').val(); 
         var location = $('#location').val(); 
-        var together = $('#together').val();    
-        
-        var a = $('#carFettle').text();
-        var b=String(a);
-        var c=String(' 可使用');
-            
+        var together = $('#together').val();
+        var cometime = $('#cometime').val(); 
         var order = '';
         $('input').focus(function(){
           $(this).css('border','');
         });
+        
         $('#dd').each(function(index) {
           if($(this).val() !== ''){
             order += $(this).val();       
           }
         });
+        
         if(time == ''){
           $('#time').css('border','1px solid #ff0000');
+          status = false;
+        }
+        if(date == ''){
+          $('#date').css('border','1px solid #ff0000');
+          status = false;
+        }
+        newInputDate = new Date(date);
+        var nowDate = new Date();
+        nowDate = nowDate.setDate(nowDate.getDate()-1);
+        nowDate = new Date(nowDate);
+        var ndate = new Date();
+        ndate = ndate.setDate(ndate.getDate()+4);
+        ndate=new Date(ndate);
+       
+        
+        if(newInputDate  < nowDate)
+        {   
+            alert('請輸入正確日期');
+            status = false;  
+        }else if(newInputDate  > ndate){
+        	alert('請輸入五日內日期');
+        	status = false;
+        }
+        if(cometime < time)
+        {   
+            alert('請輸入正確回廠時間');
+            status = false;
+        }
+        
+        if(cometime == ''){
+          $('#cometime').css('border','1px solid #ff0000');
           status = false;
         }
         if(name == ''){
@@ -285,102 +444,53 @@ a{
           $('#location').css('border','1px solid #ff0000');
           status = false;
         }
-       
-        if(b == c){
-        console.log('true')
-        }else
-        {   
-        alert('車輛出差中');
-        console.log('false')
-        status = false;
-        }
-        if(status){
+        if(status){ 
           var currentdate = new Date();
           var filltime = currentdate.getFullYear() + "/"
-                + (currentdate.getMonth() + 1) + "/"
-                + currentdate.getDate() + "  "
-                + time
+                  + (currentdate.getMonth() + 1) + "/"
+                  + currentdate.getDate() + "  "
+                  + time
+          var cometime = currentdate.getFullYear() + "/"
+                  + (currentdate.getMonth() + 1) + "/"
+                  + currentdate.getDate() + "  "
+                  + cometime	      
           var data = {
-            'name' : name,
+            'name':name,
             'phone':phone,
-            'time': filltime,
+            'date':date,
+            'time':filltime,
+            'cometime':cometime,
             'car':order,
             'location': location,
             'together':together,
-            'fettle':"出差中",
+            'fettle':"已登記",
           }
           send(data);
         }
-        
       });
     });
     function send(data){
       $.ajax({
         type: "get",
-        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
         data: data,
         dataType: "JSON",
+        error: function (xhr) {
+        	
+        	alert(xhr.responseText);
+        }, 
         success: function (response) {
+        if(response == true){
             alert('登記車輛');
-          window.location.reload();  
-          console.log(response);
+            window.location.reload(); 
+          } 
+        if(response == false){
+        	alert('車輛已被登記請選擇其他車型');
+        }
+    
         }
       });
-    }
-    
-    //載入網站帶入HINO資料
-    $(function(){
-        var notedata = {
-            'noteCar': 'HINO',
-            'action': 'noteSelection'    
-        }
-        sendNoteData(notedata)
-      });
-
-    
-    //select後里程數狀況更新
-    $(function(){
-        $("#dd").change(function(e){
-        var status = true;  
-        order = $(this).val();       
-        var notedata = {
-            'noteCar': order,
-            'action': 'noteSelection'    
-        }
-        sendNoteData(notedata)
-      });
-    });
-    
-    //備註資料代入
-    function sendNoteData(data){
-      $.ajax({
-        type: "post",
-        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
-        data: data,
-        async:false,
-        dataType: "JSON",
-        success: function (response) {
-            var content = '';
-            response.forEach(element => {
-            var [car,mileage,month,fettle] = element.data;
-            content +=
-            `
-            保養里程:
-                <label > ${mileage}</label>
-                <br>
-            備註:
-                <label > ${month}</label>
-                <br>
-            目前狀況:
-                <label id = "carFettle"> ${fettle}</label>
-            `
-            })
-            var dataView = document.getElementById('carNote');
-            dataView.innerHTML = content;
-            }
-        });
-    }
-    
+    }   
   </script>
 </body>
 </html>

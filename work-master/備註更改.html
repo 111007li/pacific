@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>出差登記</title>
+  <title>備註更改</title>
   <!-- Bootstrap core CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -17,9 +17,7 @@
      
     }
   .div-left{width:300px;height:50px;float:left;text-align:left;} 
-  img.img-responsive {
-    
-  }
+
   img {  
     max-height: 100%;  
     max-width: 100%; 
@@ -47,13 +45,13 @@ a{
 }
 .left{
 
-    width: 70%;
-    height: 70%px;
+    width: 60%;
+   
 }
 .right{
  
-    width: 50%;
-    height: 70%px;
+    width: 40%;
+  
 }
   </style>
 
@@ -69,20 +67,20 @@ a{
        <a  href="./出差修改.html">出差修改</a>
 <hr>  
 
-<div class="wrap"><!--父元素-->
+<div class="wrap">
     <div class="left">
-        <div style="text-align:left;" class="form-group col-xs-7">
-            <table border="1" width="140%"  style="border-collapse:collapse" >
+        <div style="text-align:left;" class="form-group col-xs-10">
+            <table width="160%" class="table table-striped"  style="border-collapse:collapse" >
                 <thead>
                     <tr>
-                        <th width="40%">車型</th>
-                        <th width="30%">里程數</th>
-                        <th width="20%">備註</th>
-                        <th width="20%"></th>
+                        <th >車型</th>
+                        <th >里程數</th>
+                        <th >備註</th>
+                    
                     </tr>
                 </thead>
                 <tbody id="carNowView">
-                    <!-- 目前車況 -->
+
                 </tbody>
             </table>
         </div>   
@@ -112,21 +110,20 @@ a{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
-    //車輛狀況帶出  
     var cdata = {
-        'action': 'carNow'
+        'action': 'carTodayStatus'
         }
     carNow(cdata);   
     function carNow(data){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+    url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
     data: data,
     dataType: "JSON",
     success: function(response) { 
     var content = '';
     response.forEach(element => {
-    var [car,milage,note] = element.data;
+    var [car,milage,note,status] = element.data;
     var index = element.index;
     content +=
     `
@@ -134,6 +131,7 @@ a{
     <td > ${car} </td>
     <td > ${milage} </td>
     <td > ${note} </td>
+    <td > ${status} </td>
     <td > <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
     </tr>
     `
@@ -144,7 +142,6 @@ a{
     });
     }  
     
-     //點選修改帶出資料  
     function updateNoteData(index, that){
       var data = {
         action: 'changeNote',
@@ -152,7 +149,7 @@ a{
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -179,6 +176,20 @@ a{
                 <br>
                 <input type="text"  id="changenote" value=${note}>
             </div>
+            <hr>
+            <div >
+            <label for="pwd">車輛維修</label>
+            <br>
+            	<input  type="radio" name="status" value="repair">是
+            	<input  type="radio" name="status" value="notRepair">否
+        	</div>
+            	<br>
+            <div >
+            <label for="pwd">維修完畢</label>
+                <br>
+                <input  type="radio" name="status" value="clear">是
+                <input  type="radio" name="status" value="notClear">否
+            </div>	
             <br>
             <button type="button" id="revise" >修改</button>
             <button type="button" id="delete" >刪除</button>
@@ -190,11 +201,78 @@ a{
         var dataView = document.getElementById('note1');
         dataView.innerHTML = content; 
         
-        //刪除備註
+        $(function() {
+            $('#revise').click(function(e) {
+                var status = true;
+                var index = $('#changeindex').val();
+                var note= $('#changenote').val();
+                var car = $('#changecar').val(); 
+                var milage = $('#changemilage').val();
+                var fettle =  $("[name='status']:checked").val()
+                if(fettle=='repair')
+                if (confirm('車輛維修保養會將登記資料刪除(請確認後在點擊)') == true) {
+                if(status){
+                var data = {
+                    'index':index,
+                    'milage': milage,
+                    'note': note,   
+                    'car': car,  
+                    'fettle': fettle,
+                    'action': 'resiveNote'
+                }      
+                updateNote(data)
+                setTimeout(function(){window.location.reload();}, 2000);
+                }
+                }
+                
+                if(fettle !=='repair')
+                {
+                	if(status){
+                        var data = {
+                            'index':index,
+                            'milage': milage,
+                            'note': note,   
+                            'car': car,  
+                            'fettle': fettle,
+                            'action': 'resiveNote'
+                        }      
+                        updateNote(data)
+                        setTimeout(function(){window.location.reload();}, 2000);
+                	 }
+                }
+                
+            });
+            }); 
+            function updateNote(data){
+            $.ajax({
+            type: "post",
+            url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
+            data: data,
+            async:false,
+            dataType: "JSON",
+            success: function (response) {
+            if(response === 'success'){
+                alert('修改成功');
+                } 
+            if(response === 'false'){
+                alert('車型請勿重複');
+             }
+            }
+            });
+            }
+            $(function() {
+            $('#cancel').click(function(e) {    
+            window.location.reload()
+            });
+            });
+            
+        }
+        });
+      }   
+        
         var showtxt = document.querySelector('.show');
         $(function(){ 
         $('#delete').click(function(e) {
-            //window.confirm('ConfirmBox測試成功嗎');
             if (confirm('確定刪除備註') == true) {
                 var index = $('#changeindex').val();
                 var note= $('#changenote').val();
@@ -213,17 +291,15 @@ a{
                 }      
                 deleteNote(data);
                 setTimeout(function(){window.location.reload();}, 2000);
-                //showtxt.innerHTML = '刪除備註';
             } else {
                 alert('取消刪除');
-                //showtxt.innerHTML = '取消刪除';
             }
         });
         });
         function deleteNote(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+        url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -237,64 +313,6 @@ a{
         });
         }
 
-        //修改備註
-        $(function() {
-            $('#revise').click(function(e) {
-                var status = true;
-                var index = $('#changeindex').val();
-                var note= $('#changenote').val();
-                var car = $('#changecar').val(); 
-                var milage = $('#changemilage').val();
-                console.log(index);
-                console.log(note);
-                console.log(car);
-                console.log(milage);
-                $('input').focus(function(){
-                    $(this).css('border','');
-                });
-                if(car == ''){
-                    $('#changecar').css('border','1px solid #ff0000');
-                    status = false;
-                }
-                if(status){
-                var data = {
-                    'index':index,
-                    'milage': milage,
-                    'note': note,   
-                    'car': car,  
-                    'action': 'resiveNote'
-                }      
-                updateNote(data)
-                setTimeout(function(){window.location.reload();}, 2000);
-                }
-            });
-            }); 
-            function updateNote(data){
-            $.ajax({
-            type: "post",
-            url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
-            data: data,
-            async:false,
-            dataType: "JSON",
-            success: function (response) {
-            if(response === 'success'){
-                alert('修改成功');
-                } else {
-                alert('更新失敗');
-                }
-            }
-            });
-            }
-            $(function() {
-            $('#cancel').click(function(e) {    
-            window.location.reload()
-            });
-            });
-            
-        }
-        });
-      }   
-//新增
 $(function() {
     $('#create').click(function(e) {   
     var status = true;
@@ -320,23 +338,24 @@ $(function() {
     'action': 'createNote'
     }      
     createNote(data)
-    setTimeout(function(){window.location.reload();}, 2000);
     }
     });
  });     
  function createNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbyaPcAameJDwDNSm9EwHmpaL5ZCxj8ixur0t3JIupA1xUb-T1y95x-EIQQbBfjwJscg9w/exec",
+            url: "https://script.google.com/macros/s/AKfycbysGvIHsoMk3MfCp5HR9YTlx8T3fr5QIcUwMv9ULH8k5suDv-HvrVJw7oXop6D5mubMFw/exec",
             data: data,
             async:false,
             dataType: "JSON",
             success: function (response) {
             if(response === 'success'){
                 alert('新增成功');
-                } else {
-                alert('更新失敗');
-                }
+                setTimeout(function(){window.location.reload();}, 2000);
+                } 
+            if(response === 'false'){
+            	alert('車型請勿重複');
+            }
             }
             });
             }
