@@ -116,7 +116,7 @@ a{
     function carNow(data){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+    url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
     data: data,
     dataType: "JSON",
     success: function(response) { 
@@ -148,14 +148,14 @@ a{
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+        url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
         data: data,
         async:false,
         dataType: "JSON",
         success: function(response) { 
         var content = '';
         response.forEach(element => {
-        var [car,milage,note] = element.data;
+        var [car,milage,note,status] = element.data;
         var index = element.index;
         content +=
         `
@@ -174,16 +174,17 @@ a{
                 <label for="pwd">備註</label>
                 <br>
                 <input type="text"  id="changenote" value=${note}>
+                <input type="hidden"  id="changestatus" value=${status}>
             </div>
             <hr>
-            <div >
+            <div id='radio1'>
             <label for="pwd">車輛維修</label>
             <br>
             	<input  type="radio" name="status" value="repair">是
             	<input  type="radio" name="status" value="notRepair">否
         	</div>
             	<br>
-            <div >
+            <div id='radio2'>
             <label for="pwd">維修完畢</label>
                 <br>
                 <input  type="radio" name="status" value="clear">是
@@ -199,6 +200,16 @@ a{
         })
         var dataView = document.getElementById('note1');
         dataView.innerHTML = content; 
+        
+     	//維護保養
+    	if ($('#changestatus').val() !== "維修保養") {
+		 $('#radio1').show();
+		 $('#radio2').hide();
+		 }	
+		 if ($('#changestatus').val() == "維修保養") {
+			 $('#radio1').hide();
+			 $('#radio2').show();
+			 }
         
         $(function() {
             $('#revise').click(function(e) {
@@ -247,7 +258,7 @@ a{
             function updateNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+            url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
             data: data,
             async:false,
             dataType: "JSON",
@@ -300,7 +311,7 @@ a{
         function deleteNote(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+        url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -345,7 +356,7 @@ $(function() {
  function createNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+            url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
             data: data,
             async:false,
             dataType: "JSON",

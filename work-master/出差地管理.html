@@ -102,7 +102,7 @@ a{
     function carNow(data){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+    url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
     data: data,
     dataType: "JSON",
     success: function(response) { 
@@ -139,7 +139,7 @@ a{
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+        url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -181,23 +181,23 @@ a{
                     'action': 'resiveLocation'
                 }      
                 updateNote(data)
-                setTimeout(function(){window.location.reload();}, 2000);
                 }     
             });
             }); 
             function updateNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+            url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
             data: data,
             async:false,
             dataType: "JSON",
             success: function (response) {
             if(response === 'success'){
                 alert('修改成功');
+                setTimeout(function(){window.location.reload();}, 2000);
                 } 
             if(response === 'false'){
-                alert('車型請勿重複');
+                alert('出差地請勿重複');
              }
             }
             });
@@ -232,7 +232,7 @@ a{
         function deleteNote(data){
         $.ajax({
         type: "post",
-	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+        url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -269,7 +269,7 @@ $(function() {
  function createNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+            url: "https://script.google.com/macros/s/AKfycbxC25zSTpm6tt9M3aG_kKx8LKfXy955VHLu6W9TgD7nd-WL2n-etzuvFSqAOtIsTEGdmA/exec",
             data: data,
             async:false,
             dataType: "JSON",
