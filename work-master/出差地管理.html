@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
   <meta name="author" content="">
-  <title>備註更改</title>
+  <title>出差地管理</title>
   <!-- Bootstrap core CSS -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
@@ -60,10 +60,9 @@ a{
 <body>    
   <div class="container">
     <div class="row">
-      <div class="col-lg-12 text-center">
-        <h1 class="mt-5">備註更改</h1> 
-        
-       <a  href="./出差地管理.html">出差地管理</a>
+      <div class="col-lg-7 text-center">
+        <h1 class="mt-5">出差地管理</h1> 
+       <a  href="./備註更改.html">備註更改</a>
 <hr>  
 
 <div class="wrap">
@@ -72,37 +71,24 @@ a{
             <table width="160%" class="table table-striped"  style="border-collapse:collapse" >
                 <thead>
                     <tr>
-                        <th >車型</th>
-                        <th >里程數</th>
-                        <th >備註</th>
-                    	<th >狀態</th>
+                        <th >出差地</th>                    
                     </tr>
                 </thead>
-                <tbody id="carNowView">
+                <tbody id="locationView">
 
                 </tbody>
             </table>
         </div>   
     </div>
     <div class="right">
-        <div style="text-align:left;" class="form-group col-xs-6" id="note1">
+        <div style="text-align:left;" class="form-group col-xs-8" id="note1">
             <div>
-                <label >車型</label>
+                <label >出差地</label>
                 <br>
-                <input type="text" id="car">
+                <input type="text" id="location1">
             </div>                
-            <div  >
-                <label for="pwd">里程數</label>
-                <br>
-                <input type="text" id="milage">
-            </div>
-            <div >
-                <label for="pwd">備註</label>
-                <br>
-                <input type="text"  id="note">
-            </div>
             <br>
-            <button type="button" id="create" >新增</button>
+            <button type="button" id="create">新增</button>
         </div>
     </div>
 </div><!--wrap-->
@@ -110,7 +96,7 @@ a{
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
     var cdata = {
-        'action': 'carTodayStatus'
+        'action': 'locationStatus'
         }
     carNow(cdata);   
     function carNow(data){
@@ -122,29 +108,34 @@ a{
     success: function(response) { 
     var content = '';
     response.forEach(element => {
-    var [car,milage,note,status] = element.data;
+    var [location] = element.data;
     var index = element.index;
     content +=
     `
     <tr>
-    <td > ${car} </td>
-    <td > ${milage} </td>
-    <td > ${note} </td>
-    <td > ${status} </td>
-    <td > <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
+    <td class= 'location'> ${location} </td> 	
+    <td class= 'button'> <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
     </tr>
     `
     })
-    var dataView = document.getElementById('carNowView');
+    var dataView = document.getElementById('locationView');
     dataView.innerHTML = content;  
+    
+    for (i = 0; i < $(".location").length; i++) {
+        var fettle = document.getElementsByClassName("location")[i];
+        var button = document.getElementsByClassName("button")[i];
+        if (fettle.innerText == "其他") {
+        	button.innerText = '';
+        }
+    }
     }
     });
     }  
     
     function updateNoteData(index, that){
       var data = {
-        action: 'changeNote',
-        index: index-1,
+        action: 'locationUpdate',
+        index: index-1,  
       };
       $.ajax({
         type: "post",
@@ -155,45 +146,23 @@ a{
         success: function(response) { 
         var content = '';
         response.forEach(element => {
-        var [car,milage,note] = element.data;
+        var [location] = element.data;
         var index = element.index;
         content +=
         `
         <input type=hidden id="changeindex" value=${index} >
         <div>
-                <label >車型</label>
+                <label >出差地</label>
                 <br>
-                <input type="text" id="changecar" value=${car} >
-            </div>                
-            <div  >
-                <label for="pwd">里程數</label>
-                <br>
-                <input type="text" id="changemilage" value=${milage}>
-            </div>
-            <div >
-                <label for="pwd">備註</label>
-                <br>
-                <input type="text"  id="changenote" value=${note}>
-            </div>
-            <hr>
-            <div >
-            <label for="pwd">車輛維修</label>
+                <input type="text" id="changelocation" value=${location} >
+            </div>        
             <br>
-            	<input  type="radio" name="status" value="repair">是
-            	<input  type="radio" name="status" value="notRepair">否
-        	</div>
-            	<br>
-            <div >
-            <label for="pwd">維修完畢</label>
-                <br>
-                <input  type="radio" name="status" value="clear">是
-                <input  type="radio" name="status" value="notClear">否
-            </div>	
-            <br>
+ 			<div>
             <button type="button" id="revise" >修改</button>
             <button type="button" id="delete" >刪除</button>
             <button type="button" id="cancel" >取消</button>
-            <p class='show'></p>
+            </div>
+
         </div>
         `
         })
@@ -204,44 +173,16 @@ a{
             $('#revise').click(function(e) {
                 var status = true;
                 var index = $('#changeindex').val();
-                var note= $('#changenote').val();
-                var car = $('#changecar').val(); 
-                var milage = $('#changemilage').val();
-                var fettle =  $("[name='status']:checked").val()
-                console.log(fettle);
-                if(fettle=='repair')
-                if (confirm('車輛維修保養會將登記資料刪除(請確認後在點擊)') == true) {
+                var location = $('#changelocation').val(); 
                 if(status){
                 var data = {
                     'index':index,
-                    'milage': milage,
-                    'note': note,   
-                    'car': car,  
-                    'fettle': fettle,
-                    'action': 'resiveNote'
+                    'location': location,
+                    'action': 'resiveLocation'
                 }      
-               
                 updateNote(data)
                 setTimeout(function(){window.location.reload();}, 2000);
-                }
-                }
-                
-                if(fettle !=='repair')
-                {
-                	if(status){
-                        var data = {
-                            'index':index,
-                            'milage': milage,
-                            'note': note,   
-                            'car': car,  
-                            'fettle': fettle,
-                            'action': 'resiveNote'
-                        }      
-                        updateNote(data)
-                        setTimeout(function(){window.location.reload();}, 2000);
-                	 }
-                }
-                
+                }     
             });
             }); 
             function updateNote(data){
@@ -269,26 +210,17 @@ a{
             
         }
         });
-      
-        
 
         $(function(){ 
         $('#delete').click(function(e) {
-            if (confirm('確定刪除備註') == true) {
+            if (confirm('確定要刪除出差地嗎') == true) {
                 var index = $('#changeindex').val();
-                var note= $('#changenote').val();
-                var car = $('#changecar').val(); 
-                var milage = $('#changemilage').val();
-                console.log(index);
-                console.log(note);
-                console.log(car);
-                console.log(milage);
+                var location = $('#changelocation').val(); 
+
                 var data = {
                     'index':index,
-                    'milage': milage,
-                    'note': note,   
-                    'car': car,  
-                    'action': 'deleteNote'
+                    'location': location,
+                    'action': 'deleteLocation'
                 }      
                 deleteNote(data);
                 setTimeout(function(){window.location.reload();}, 2000);
@@ -300,7 +232,7 @@ a{
         function deleteNote(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -314,29 +246,21 @@ a{
         });
         }    
     }
+    
+   
 $(function() {
     $('#create').click(function(e) {   
     var status = true;
-    var note= $('#note').val();
-    var car = $('#car').val(); 
-    var milage = $('#milage').val();
-   
-    console.log(note);
-    console.log(car);
-    console.log(milage);
-    $('input').focus(function(){
-    $(this).css('border','');
-    });
-    if(car == ''){
-    $('#car').css('border','1px solid #ff0000');
+    var location= $('#location1').val();
+
+    if(location == ''){
+    $('#location1').css('border','1px solid #ff0000');
     status = false;
     }
     if(status){
     var data = {
-    'milage': milage,
-    'note': note,   
-    'car': car,  
-    'action': 'createNote'
+    'location': location, 
+    'action': 'createLocation'
     }      
     createNote(data)
     }
@@ -355,7 +279,7 @@ $(function() {
                 setTimeout(function(){window.location.reload();}, 2000);
                 } 
             if(response === 'false'){
-            	alert('車型請勿重複');
+            	alert('出差地請勿重複');
             }
             }
             });

@@ -36,28 +36,40 @@ a{
         padding: 1em;
         text-align: left;
     }
+    
+.wrap{ /*父元素*/
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+.left{
+    width: 50%;
+    height: 200px;
+}
+.right{
+    width: 60%;
+    height: 200px;
+}
   </style>
 
 </head>
 
 <body>     
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-12 text-center">
+<div class="container">
+<div class="col-lg-12 text-center">
+
         <h1 class="mt-5">出差登記</h1> 
-        
        <a href="./出差修改.html">出差修改</a>
-       <a href="./備註更改.html">備註更改</a>
 <hr>  
-
-<div style="text-align:left;" class="form-group col-xs-5">
-
 </div>
-       
-        <br> 
+</div> 
+
+<div class="wrap"><!--父元素-->
+<div class="left">
         <div>
         <ul  class="list-unstyled">
-            <li class="col-xs-5">
+            <li class="col-xs-8">
                 <img   src="./images/HINO.jpg" alt="" id="image">
                 <br>
                 <br>
@@ -80,66 +92,103 @@ a{
 			</li>
         </ul>           
         </div>
-        
-
-        <br>
-        
-        <div style="text-align:left;" class="form-group col-xs-6">
-        <div class="div-left" >
+</div>
+<div class="right">
         <label >車型</label>
-                <br>
+        <div >
                 <select name="number"  data-price="50" data-name="鹹酥雞"  id="dd">
                 </select>
         </div>     
-        <div class="div-left" >
+         <br>
+        
+        
             <label for="pwd">出差日期</label>
-            <br>
+            <div >
             <input type="date" name="usr_date" id="date">
             <button type="button" id="checkDate">查看登記狀況</button>
-        </div>    
-        <div class="div-left" >
+            </div>    
+         <br>
+        
+       
             <label for="pwd">出差時間</label>
-            <br>
+             <div >
             <input type="time" name="usr_time" id="time">
-        </div>
-        <div class="div-left">
+        	</div>
+        <br>
+         
+       
           <label for="pwd">使用者</label>
-          <br>
-          <input type="text"  id="name">
-        </div>
-        <div class="div-left">
+           <div >
+           <input type="text"  id="name">
+           </div>
+        <br>
+         
+       
           <label for="pwd">電話</label>
-          <br>
+          <div >
           <input type="number"  id="phone">
-        </div>
-        <div class="div-left">
+          </div>
+		 <br>
+
+         
+          <label for="pwd">同行者</label>
+          <div > 
+          <input type="text"  id="together">
+          </div> 
+         <br>
+        
+        
+            <label for="pwd">預計回廠</label>
+            <div >
+            <input type="time" name="usr_time" id="cometime">  
+        	</div>     
+        <br>
+        <div >
           <label for="pwd">出差地</label>
           <br>
-          <input type="text"  id="location">
+   		  <select name="locationOrder" id="locationOrder" onchange='reprint()'>
+<!--           <option value= "其他" >其他</option> -->
+<!--           <option value= "KZ" >KZ</option> -->
+<!--           <option value= "WZ" >WZ</option> -->
+          </select>
+          <p id="original" >
+          	<input type="text"  id="location" >
+          </p>	
+               
         </div>
-        <div class="div-left">  
-          <label for="pwd">同行者</label>
           <br>
-          <input type="text"  id="together">
-        </div> 
-        <div class="div-left" >
-            <label for="pwd">預計回廠</label>
-            <br>
-            <input type="time" name="usr_time" id="cometime">  
-             <br>
-                          <br>
-            <button type="button" id="sendOrder" class="btn btn-primary col-xs-5">預約</button>
-        </div>     
-      </div>   
-    </div>
-     </div>
-  </div>
-  <hr>
+        <button type="button" id="sendOrder" class="btn btn-primary col-xs-3">預約</button>
+      
+</div>    
+</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
   <script>       
+  	
+  		var selectdata = {
+	        'action': 'locationSelection'
+	        }
+  		locationSelection(selectdata);         
+	    function locationSelection(selectdata){
+	    $.ajax({
+	    type: "post",
+	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
+	    data: selectdata,
+	    dataType: "JSON",
+	    success: function(response) { 
+	    var content = '';
+	    response.forEach(element => {
+	    var [location] = element.data;
+	    content +=
+	    `<option value= ${location} >${location}</option>`
+	    })
+	    var dataView = document.getElementById('locationOrder');
+	    dataView.innerHTML = content;
+	    }
+	    });
+	    }
   	
      var selectdata = {
         'action': 'selection'
@@ -148,7 +197,7 @@ a{
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbx0ScnwArJwPEuadgsyyhqvvaLFNAnxLP61ojldbZFmdcwsdLSDCUOMa-sv1UGjTUgWxw/exec",
+    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
@@ -176,6 +225,11 @@ a{
         $("#dd").change(function(){
         switch ($(this).val()){
         default:
+        case 'AA': 
+            var flag = "./images/未命名.jpg";
+            $("#image").attr("src",flag);
+            $("#sel2 option").remove();
+        break;
         case 'SIENTA-RCT': 
         var flag = "./images/SIENTA-RCT.jpg";
         $("#image").attr("src",flag);
@@ -250,7 +304,7 @@ a{
   function sendNoteData(data){
     $.ajax({
       type: "post",
-      url: "https://script.google.com/macros/s/AKfycbx0ScnwArJwPEuadgsyyhqvvaLFNAnxLP61ojldbZFmdcwsdLSDCUOMa-sv1UGjTUgWxw/exec",
+	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
       data: data,
       async:false,
       dataType: "JSON",
@@ -260,8 +314,6 @@ a{
           var [car,mileage,month,fettle] = element.data;
           content +=
           `
-          
-          
               <label style="font-size:18px;">保養里程: ${mileage}</label>
               <br>
           
@@ -334,7 +386,7 @@ a{
   	function carTodayStatus(data){
 	    $.ajax({
 	    type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx0ScnwArJwPEuadgsyyhqvvaLFNAnxLP61ojldbZFmdcwsdLSDCUOMa-sv1UGjTUgWxw/exec",
+	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
 	    data: data,
 	    dataType: "JSON",
 	    success: function(response) { 
@@ -345,19 +397,27 @@ a{
 	    `
 	    <tr>
 	    <td>${car}</td>
-	    <td>${fettle}</td>
+	    <td class= 'fettle'>${fettle}</td>
 	    </tr>
 	    `
 	    })
 	    var dataView = document.getElementById('carStatusNowView');
 	    dataView.innerHTML = content;
+	    
+	    for (i = 0; i < $(".fettle").length; i++) {
+            var fettle = document.getElementsByClassName("fettle")[i];
+            if (fettle.innerText == "出差中") {
+            	$(fettle).css("background-color", "red");
+            }
+        }
+	    
 	    }
 	    });
 	}   	 
   	function carDateStatus(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx0ScnwArJwPEuadgsyyhqvvaLFNAnxLP61ojldbZFmdcwsdLSDCUOMa-sv1UGjTUgWxw/exec",
+	    url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
         data: data,
         dataType: "JSON",
         success: function(response) { 
@@ -375,6 +435,7 @@ a{
         })
         var dataView = document.getElementById('carStatusNowView');
         dataView.innerHTML = content;
+        
         }
         });
         }  
@@ -386,10 +447,11 @@ a{
         var phone = $('#phone').val(); 
         var date = $('#date').val(); 
         var time = $('#time').val(); 
-        var location = $('#location').val(); 
+        var location = '' ;
         var together = $('#together').val();
         var cometime = $('#cometime').val(); 
         var order = '';
+        var locationOrder = '';
         $('input').focus(function(){
           $(this).css('border','');
         });
@@ -439,10 +501,39 @@ a{
           $('#name').css('border','1px solid #ff0000');
           status = false;
         }
-        if(location == ''){
-          $('#location').css('border','1px solid #ff0000');
-          status = false;
+        
+        $('#locationOrder').each(function(index) {
+            if($(this).val() !== ''){
+            	locationOrder = $(this).val();   
+            }
+            if($(this).val() == '其他'){
+            	$('#original').show();
+        	    $('#originallink').attr("required","required");
+            }else{
+        	    $('#original').hide();
+        	    $('#originallink').removeAttr("required");
+        	}
+        });
+        
+        if(locationOrder !== ''){
+        	var c = $('#location').val();  
+            if(locationOrder == '其他'){
+            if(c !== ''){
+            	location = $('#location').val(); 
+            	}else{
+                     $('#location').css('border','1px solid #ff0000');
+                     status = false;
+            	}
+           	  }
+       		
+            if(locationOrder !== '其他'){
+            	location = locationOrder
+            }
         }
+        
+     	console.log(location);
+     	console.log(locationOrder);
+
         if(status){ 
           var currentdate = new Date();
           var filltime = currentdate.getFullYear() + "/"
@@ -471,7 +562,7 @@ a{
     function send(data){
       $.ajax({
         type: "get",
-        url: "https://script.google.com/macros/s/AKfycbx0ScnwArJwPEuadgsyyhqvvaLFNAnxLP61ojldbZFmdcwsdLSDCUOMa-sv1UGjTUgWxw/exec",
+        url: "https://script.google.com/macros/s/AKfycbzeHK9XYwWngpwmhXHK7lw1otXJAQgDbmEvI0k1zw1w8FzzCCD7r-vgRYRdkBOU_yDxxw/exec",
         data: data,
         dataType: "JSON",
         error: function (xhr) {
@@ -490,6 +581,17 @@ a{
         }
       });
     }   
+    
+    function reprint(){
+    	   var locationOrder = $('#locationOrder').val();
+    	   if(locationOrder=='其他'){
+    	    $('#original').show();
+    	    $('#originallink').attr("required","required");
+    	   }else{
+    	    $('#original').hide();
+    	    $('#originallink').removeAttr("required");
+    	   }
+    	  }
   </script>
 </body>
 </html>
