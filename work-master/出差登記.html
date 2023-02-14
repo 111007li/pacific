@@ -124,9 +124,15 @@ a{
         <br>
          
        
-          <label for="pwd">電話</label>
+          <label for="pwd">公務手機</label>
           <div >
-          <input type="number"  id="phone">
+				<select name="locationOrder" id="phone">
+					<option value=" ">無</option>
+					<option value="85">85</option>
+					<option value="86">86</option>
+					<option value="87">87</option>
+					<option value="88">88</option>
+				</select>
           </div>
 		 <br>
 
@@ -444,7 +450,7 @@ a{
         $('#sendOrder').click(function(e){
         var status = true;
         var name = $('#name').val();
-        var phone = $('#phone').val(); 
+        var phone ='';
         var date = $('#date').val(); 
         var time = $('#time').val(); 
         var location = '' ;
@@ -461,6 +467,11 @@ a{
             order += $(this).val();       
           }
         });
+        $('#phone').each(function(index) {
+            if($(this).val() !== ''){
+              phone += $(this).val();       
+            }
+          });
         
         if(time == ''){
           $('#time').css('border','1px solid #ff0000');
