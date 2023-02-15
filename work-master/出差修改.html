@@ -78,12 +78,12 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <thead>
 <tr>
 <th>人員</th>
-<th>公務手機</th>
+<th>電話</th>
 <th>車型</th>
 <th>出差地</th>
 <th>同行者</th>
 <th>登記日期</th>
-<th>出發時間</th>
+<th>登記時間</th>
 <th>預計回廠時間</th>
 <th>檢查外觀</th>
 <th>加油</th>
@@ -207,8 +207,6 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     `<button type="button"  onclick="updateDataAll(${index},this)" class="btn btn-primary" id="set">修改</button>`
                                  }
                             </td>
-                            <td class="cancel">
-                            </td>
                             </tr>
                             `
         });
@@ -238,13 +236,15 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             date = new Date(date.innerText);
             bdate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
             aname = String(name.innerText);
-            if (todayDate < date) { 
-            	leave.innerText='';
-            	   
+            
+            //大於今日才取消登記
+            if (todayDate < date) {
+            	
+            	document.getElementsByClassName("leave")[i].innerHTML = 
+                    "<button type='button'  onclick='deleteUpdateData("+index+",\""+bdate+"\",\""+aname+"\",this);' class='btn btn-primary' class='deleteData'>取消登記</button>"    
             }
-            document.getElementsByClassName("cancel")[i].innerHTML = 
-                "<button type='button'  onclick='deleteUpdateData("+index+",\""+bdate+"\",\""+aname+"\",this);' class='btn btn-primary' class='deleteData'>取消登記</button>" 
           }
+       
    
     }
     function deleteUpdateData(index,bdate,aname,that){
@@ -603,7 +603,7 @@ function RehandleData(response) {
      	function carTodayStatus(data){
    	    $.ajax({
    	    type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+   	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
    	    data: data,
    	    dataType: "JSON",
    	    success: function(response) { 
