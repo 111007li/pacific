@@ -165,7 +165,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         function SendAllQuery(data){
             $.ajax({
               type: "post",
-              url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+              url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
               data: data,
               dataType: "JSON",
               success: function (response) {
@@ -181,6 +181,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             response.forEach(element => {
                         var [name,phone,car,location,together,date,time,comeTime,carOutward,getGas,comeCompanyTime,fettle] = element.data;
                         var index = element.index;
+                      
                         content +=
                             `
                             <tr>
@@ -207,6 +208,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                                     `<button type="button"  onclick="updateDataAll(${index},this)" class="btn btn-primary" id="set">修改</button>`
                                  }
                             </td>
+                            <td class = "cancel" >
+                            </td>
                             </tr>
                             `
         });
@@ -226,10 +229,34 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             var leave = document.getElementsByClassName("leave")[i];
             var index = document.getElementsByClassName("index")[i];
             var status = document.getElementsByClassName("status")[i];
+            var close = document.getElementsByClassName("cancel")[i];
             var comeCompanyTime = document.getElementsByClassName("comeCompanyTime")[i];
             if (status.innerText == '已登記') {
             	comeCompanyTime.innerText='';
             }
+            
+            var today = new Date();
+            var tdm = today.getMonth() + 1;
+            if (tdm.toString().length == 1) {
+                tdm = "0" + tdm;
+            }
+            var tdd = today.getDate()
+            if (tdd.toString().length == 1) {
+                tdd = "0" + tdd;
+            }
+            td = today.getFullYear() + '/' + tdm + '/' + tdd;
+            
+            var cday = new Date(date.innerText);
+            var ctdm = cday.getMonth() + 1;
+            if (ctdm.toString().length == 1) {
+                ctdm = "0" + ctdm;
+            }
+            var ctdd = cday.getDate()
+            if (ctdd.toString().length == 1) {
+                ctdd = "0" + ctdd;
+            }
+            ctd = cday.getFullYear() + '/' + ctdm + '/' + ctdd;
+
             index=parseInt(index.innerText);
             var todayDate = new Date();
 	        adate = todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1) + '-' + todayDate.getDate();
@@ -237,25 +264,36 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             bdate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
             aname = String(name.innerText);
             
+            console.log(td)
+         	console.log(ctd)
             //大於今日才取消登記
-            if (todayDate < date) {
-            	
-            	document.getElementsByClassName("leave")[i].innerHTML = 
-                    "<button type='button'  onclick='deleteUpdateData("+index+",\""+bdate+"\",\""+aname+"\",this);' class='btn btn-primary' class='deleteData'>取消登記</button>"    
+            if ( td < ctd ) {
+            	document.getElementsByClassName("leave")[i].innerHTML = "";
+//                     "<button type='button'  onclick='deleteUpdateData("+index+",\""+bdate+"\",\""+aname+"\",this);' class='btn btn-primary' class='deleteData'>取消登記</button>"    
             }
+            
+          	if (status.innerText == '已登記') {
+          		 if ( td == ctd||td < ctd ) {
+          		document.getElementsByClassName("cancel")[i].innerHTML = 
+                  	"<button type='button'  onclick='deleteUpdateData("+index+",\""+bdate+"\",\""+aname+"\",this);' class='btn btn-primary' class='deleteData'>取消登記</button>"
+          		 }
+            }
+          	if (status.innerText == '可使用') {
+          		close.innerText='-';
+          	}
           }
        
    
     }
-    function deleteUpdateData(index,bdate,aname,that){
-    	if (confirm('日期: '+bdate+'   登記者: '+aname+'  (確定刪除登記)') == true) {
+    function deleteUpdateData(index,date,name,that){
+    	if (confirm('日期: '+date+'   登記者: '+name+'  (確定刪除登記)') == true) {
     		var data = {
     	              action: 'delete',
     	              index: index-1,
     	            };
     	            $.ajax({
     	              type: "post",
-    	              url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+    	              url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
     	              data: data,
     	              dataType: "JSON",
     	              success: function (response) {
@@ -275,7 +313,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -380,7 +418,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     function updateStatusData(data){
         $.ajax({
           type: "post",
-          url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+          url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
           data: data,
           dataType: "JSON",
           success: function (response) {
@@ -400,7 +438,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -523,7 +561,7 @@ function RehandleData(response) {
         function carNow(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
         data: data,
         dataType: "JSON",
 		error: function (xhr) {
@@ -603,7 +641,7 @@ function RehandleData(response) {
      	function carTodayStatus(data){
    	    $.ajax({
    	    type: "post",
-   	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+   	    url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
    	    data: data,
    	    dataType: "JSON",
    	    success: function(response) { 
@@ -626,7 +664,7 @@ function RehandleData(response) {
      	function carDateStatus(data){
            $.ajax({
            type: "post",
-           url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+           url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
            data: data,
            dataType: "JSON",
            success: function(response) { 
@@ -693,7 +731,11 @@ function RehandleData(response) {
                 	alert('請輸入五日內日期');
                 	status = false;
                 }
-                
+                if(cometime < time)
+                {   
+                    alert('請輸入正確回廠時間');
+                    status = false;
+                }
                 
                 if(status){
                 var currentdate = new Date();
@@ -727,7 +769,7 @@ function RehandleData(response) {
      function updateInputData(data){
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -756,7 +798,7 @@ function RehandleData(response) {
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+    url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
