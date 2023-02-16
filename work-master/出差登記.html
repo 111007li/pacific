@@ -70,7 +70,9 @@ a{
         <div>
         <ul  class="list-unstyled">
             <li class="col-xs-8">
-                <img   src="./images/HINO.jpg" alt="" id="image">
+            <!-- **********************************************************************  -->
+            <!-- HINO 第一輛車 -->
+                <img   src="./images/HINO RCK-3218.jpg" alt="" id="image">
                 <br>
                 <br>
                 <div id="carNote">
@@ -227,7 +229,8 @@ a{
         $('div[id =""]').show();
         });
         });
-        
+    //*****************************************************
+        //根據備註的車名修改
         $("#dd").change(function(){
         switch ($(this).val()){
         default:
@@ -236,49 +239,49 @@ a{
             $("#image").attr("src",flag);
             $("#sel2 option").remove();
         break;
-        case 'SIENTA-RCT': 
-        var flag = "./images/SIENTA-RCT.jpg";
+        case 'TOWN': 
+        var flag = "./images/TOWN RDX-6318.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();
         break;
         
         case 'CROSS': 
-        var flag = "./images/CROSS.jpg";
+        var flag = "./images/CROSS RDF-9718.jpg";
         $("#image").attr("src",flag);
         break;
          
         case "HINO": 
-        var flag = "./images/HINO.jpg";
+        var flag = "./images/HINO RCK-3218.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();    
         break;
 
-        case "SIENTA-RDC": 
-        var flag = "./images/SIENTA-RDC.jpg";
+        case "SIENTA": 
+        var flag = "./images/SIENTA RDC-0718.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();    
         break;
              
         case "YARIS": 
-        var flag = "./images/YARIS.jpg";
+        var flag = "./images/YARIS RDW-2018.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();    
         break;
    
         case "CAMRY-2.5": 
-        var flag = "./images/CAMRY-2.5.jpeg";
+        var flag = "./images/CAMRY RCD-3718.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();    
         break;
 
         case "ALTIS-RDR": 
-        var flag = "./images/ALTIS-RDR.jpg";
+        var flag = "./images/ALTIS RDR-5018.jpg";
         $("#image").attr("src",flag);
         $("#sel2 option").remove();    
         break;
 
         case "ALTIS-RDG": 
-        var flag = "./images/ALTIS-RDG.jpg";
+        var flag = "./images/ALTIS RDG-1918.jpg";
         $("#image").attr("src",flag);
         $('#CarTitle').text('3月');
         $('#carFettle').text('80000');
@@ -286,7 +289,7 @@ a{
         break;
         }
         });
-      
+      //****************************************************************
   </script>
   <script>
   $(function(){
