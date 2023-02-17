@@ -12,39 +12,15 @@
 <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
-        body {
-            padding-top: 54px;
-        }
+       
         
-        a{
-	margin: 10px;
-        }
-    
-        .form-group {
-            text-align: left;
-        }
+   td{
+ font-size: 20px;
+}
+    th {
+ font-size: 20px;
+}
         
-        img.img-responsive {
-            height: 400px;
-        }
-        
-        @media (min-width: 992px) {
-            body {
-                padding-top: 56px;
-            }
-        }
-        
-        @media (max-width: 980px) {
-            img.img-responsive {
-                height: 250px;
-            }
-        }
-        
-        @media (max-width: 480px) {
-            img.img-responsive {
-                height: 100px;
-            }
-        }
     </style>
 
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
@@ -67,24 +43,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 <select id="sel2"></select>
 <button type="button" id="search" >查詢</button>
 <button type="button" onclick="location.href='./出差修改.html'">全部</button>
-</div>
+</div></div></div></div>
+
 <div class="form-group col-xs-12">
 </div>  
 <div id="test"></div>
 <div class="form-group col-xs-12">
 </div>
 <div class="form-group col-xs-12">
-<table class="table table-striped" >
+<table class="table table-striped" width="20%">
 <thead>
 <tr>
-<th>人員</th>
-<th>電話</th>
-<th>車型</th>
+<th >人員</th>
+<th>手機</th>
+<th >車型</th>
 <th>出差地</th>
-<th>同行者</th>
+<th >同行者</th>
 <th>登記日期</th>
-<th>登記時間</th>
-<th>預計回廠時間</th>
+<th>出發時間</th>
+<th>預計回廠</th>
 <th>檢查外觀</th>
 <th>加油</th>
 <th>回廠時間</th>
@@ -165,7 +142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         function SendAllQuery(data){
             $.ajax({
               type: "post",
-              url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+              url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
               data: data,
               dataType: "JSON",
               success: function (response) {
@@ -293,7 +270,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     	            };
     	            $.ajax({
     	              type: "post",
-    	              url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+    	              url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
     	              data: data,
     	              dataType: "JSON",
     	              success: function (response) {
@@ -313,7 +290,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -418,7 +395,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     function updateStatusData(data){
         $.ajax({
           type: "post",
-          url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+          url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
           data: data,
           dataType: "JSON",
           success: function (response) {
@@ -438,7 +415,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -561,7 +538,7 @@ function RehandleData(response) {
         function carNow(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
 		error: function (xhr) {
@@ -641,7 +618,7 @@ function RehandleData(response) {
      	function carTodayStatus(data){
    	    $.ajax({
    	    type: "post",
-   	    url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
    	    data: data,
    	    dataType: "JSON",
    	    success: function(response) { 
@@ -664,7 +641,7 @@ function RehandleData(response) {
      	function carDateStatus(data){
            $.ajax({
            type: "post",
-           url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+           url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
            data: data,
            dataType: "JSON",
            success: function(response) { 
@@ -769,7 +746,7 @@ function RehandleData(response) {
      function updateInputData(data){
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -798,7 +775,7 @@ function RehandleData(response) {
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbwKJyZpHPn0lfuHO0MquPqW7vfQO19VxYRcKEn1Rn7y3USwRaKW3mIORZ7j-bnC_f7A/exec",
+    url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 

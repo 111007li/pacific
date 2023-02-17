@@ -12,6 +12,24 @@
 
   <!-- Custom styles for this template -->
   <style>
+  label{
+ font-size: 20px;
+}
+input{
+ font-size: 20px;
+}
+td{
+ font-size: 20px;
+}
+  th {
+ font-size: 20px;
+}
+select{
+ font-size: 20px;
+}
+option{
+ font-size: 20px;
+}
     body {
       padding-top: 54px;
      
@@ -57,9 +75,9 @@ a{
 
 <body>     
 <div class="container">
-<div class="col-lg-12 text-center">
+<div class="col-lg-7 text-center">
 
-        <h1 class="mt-5">出差登記</h1> 
+       <h1 class="mt-5">出差登記</h1> 
        <a href="./出差修改.html">出差修改</a>
 <hr>  
 </div>
@@ -128,7 +146,7 @@ a{
        
           <label for="pwd">公務手機</label>
           <div >
-				<select name="locationOrder" id="phone">
+				<select  id="phone">
 					<option value=" ">無</option>
 					<option value="85">85</option>
 					<option value="86">86</option>
@@ -137,11 +155,30 @@ a{
 				</select>
           </div>
 		 <br>
-
-         
+			
+			
           <label for="pwd">同行者</label>
-          <div > 
-          <input type="text"  id="together">
+          <div >
+				<select  id="togetherT" onchange='together()'>
+					<option value="無">無</option>
+					<option value="一位">一位</option>
+					<option value="兩位">兩位</option>
+					<option value="三位">三位</option>
+					<option value="四位">四位</option>
+					<option value="五位">五位</option>
+				</select>
+		  <p id="togetherT2" >
+          	<input type="text"  id="t1">
+          	<br>
+          	<input type="text"  id="t2">
+          	<br>
+          	<input type="text"  id="t3">
+         	<br>
+          	<input type="text"  id="t4">
+          	<br>
+          	<input type="text"  id="t5">
+          </p>	
+          
           </div> 
          <br>
         
@@ -151,10 +188,11 @@ a{
             <input type="time" name="usr_time" id="cometime">  
         	</div>     
         <br>
+        
         <div >
           <label for="pwd">出差地</label>
           <br>
-   		  <select name="locationOrder" id="locationOrder" onchange='reprint()'>
+   		  <select  id="locationOrder" onchange='reprint()'>
 <!--           <option value= "其他" >其他</option> -->
 <!--           <option value= "KZ" >KZ</option> -->
 <!--           <option value= "WZ" >WZ</option> -->
@@ -182,7 +220,7 @@ a{
 	    function locationSelection(selectdata){
 	    $.ajax({
 	    type: "post",
-	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
 	    data: selectdata,
 	    dataType: "JSON",
 	    success: function(response) { 
@@ -205,7 +243,7 @@ a{
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+    url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 
@@ -313,7 +351,7 @@ a{
   function sendNoteData(data){
     $.ajax({
       type: "post",
-	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+      url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
       data: data,
       async:false,
       dataType: "JSON",
@@ -395,7 +433,7 @@ a{
   	function carTodayStatus(data){
 	    $.ajax({
 	    type: "post",
-	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
 	    data: data,
 	    dataType: "JSON",
 	    success: function(response) { 
@@ -426,7 +464,7 @@ a{
   	function carDateStatus(data){
         $.ajax({
         type: "post",
-	    url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
         success: function(response) { 
@@ -457,7 +495,11 @@ a{
         var date = $('#date').val(); 
         var time = $('#time').val(); 
         var location = '' ;
-        var together = $('#together').val();
+        var t1 = $('#t1').val();
+        var t2 = $('#t2').val();
+        var t3 = $('#t3').val();
+        var t4 = $('#t4').val();
+        var t5 = $('#t5').val();
         var cometime = $('#cometime').val(); 
         var order = '';
         var locationOrder = '';
@@ -561,7 +603,12 @@ a{
             'cometime':cometime,
             'car':order,
             'location': location,
-            'together':together,
+          
+            't1':t1,
+            't2':t2,
+            't3':t3,
+            't4':t4,
+            't5':t5,
             'fettle':"已登記",
           }
           send(data);
@@ -571,7 +618,7 @@ a{
     function send(data){
       $.ajax({
         type: "get",
-        url: "https://script.google.com/macros/s/AKfycbx5gmmJmTU-I9PLyGQCw60NaUKirz3i2o9ZnZtn5spC-KN92SrAqeEdAVfALePHA-Rkgg/exec",
+        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
         data: data,
         dataType: "JSON",
         error: function (xhr) {
@@ -601,6 +648,65 @@ a{
     	    $('#originallink').removeAttr("required");
     	   }
     	  }
+    
+    
+    
+    	$('#t1').hide();
+	   	$('#t2').hide();
+	 	$('#t3').hide();
+		$('#t4').hide();
+		$('#t5').hide();
+		function together(){
+		 	   var locationOrder = $('#togetherT').val();
+		 	   if(locationOrder=='無'){
+		 	    $('#t1').hide();
+		 	   	$('#t2').hide();
+		 	 	$('#t3').hide();
+		 		$('#t4').hide();
+		 		$('#t5').hide();
+		 	    $('#togetherT2').attr("required","required");
+		 	   }
+		 	  if(locationOrder=='一位'){
+		 	 	    $('#t1').show();
+		 	 	   	$('#t2').hide();
+		 	 	 	$('#t3').hide();
+		 	 		$('#t4').hide();
+		 	 		$('#t5').hide();
+		 	 	    $('#togetherT2').attr("required","required");
+		 	 }
+		 	 if(locationOrder=='兩位'){
+		 	 	    $('#t1').show();
+		 	 	   	$('#t2').show();
+		 	 	 	$('#t3').hide();
+		 	 		$('#t4').hide();
+		 	 		$('#t5').hide();
+		 	 	    $('#togetherT2').attr("required","required");
+		 	 }
+		 	if(locationOrder=='三位'){
+	 	 	    $('#t1').show();
+	 	 	   	$('#t2').show();
+	 	 	 	$('#t3').show();
+	 	 		$('#t4').hide();
+	 	 		$('#t5').hide();
+	 	 	    $('#togetherT2').attr("required","required");
+	 	 }
+		 	if(locationOrder=='四位'){
+	 	 	    $('#t1').show();
+	 	 	   	$('#t2').show();
+	 	 	 	$('#t3').show();
+	 	 		$('#t4').show();
+	 	 		$('#t5').hide();
+	 	 	    $('#togetherT2').attr("required","required");
+	 	 }
+		 	if(locationOrder=='五位'){
+	 	 	    $('#t1').show();
+	 	 	   	$('#t2').show();
+	 	 	 	$('#t3').show();
+	 	 		$('#t4').show();
+	 	 		$('#t5').show();
+	 	 	    $('#togetherT2').attr("required","required");
+	 	 }
+		}
   </script>
 </body>
 </html>
