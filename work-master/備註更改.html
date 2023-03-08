@@ -76,6 +76,7 @@ a{
                         <th >里程數</th>
                         <th >備註</th>
                     	<th >狀態</th>
+                    	<th >預定保養</th>
                     </tr>
                 </thead>
                 <tbody id="carNowView">
@@ -109,6 +110,26 @@ a{
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
+  
+  Date.prototype.format =function(format){
+		var o = {
+			"M+" : this.getMonth()+1, 
+			"d+" : this.getDate(), 
+			"h+" : this.getHours(), 
+			"m+" : this.getMinutes(), 
+			"s+" : this.getSeconds(), 
+			"q+" : Math.floor((this.getMonth()+3)/3), 
+			"S" : this.getMilliseconds() 
+		}
+		if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+			(this.getFullYear()+"").substr(4- RegExp.$1.length));
+		for(var k in o)if(new RegExp("("+ k +")").test(format))
+			format = format.replace(RegExp.$1,
+				RegExp.$1.length==1? o[k] :
+					("00"+ o[k]).substr((""+ o[k]).length));
+		return format;
+      }
+  
     var cdata = {
         'action': 'carTodayStatus'
         }
@@ -116,13 +137,13 @@ a{
     function carNow(data){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+    url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
     data: data,
     dataType: "JSON",
     success: function(response) { 
     var content = '';
     response.forEach(element => {
-    var [car,milage,note,status] = element.data;
+    var [car,milage,note,status,,,,,,,carrepairdate] = element.data;
     var index = element.index;
     content +=
     `
@@ -130,13 +151,21 @@ a{
     <td > ${car} </td>
     <td > ${milage} </td>
     <td > ${note} </td>
-    <td > ${status} </td>
+    <td class= 'fettle'> ${status} </td>
+    <td class= 'carrepairdate'> ${new Date(carrepairdate).format("MM/dd")} </td>
     <td > <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
     </tr>
     `
     })
     var dataView = document.getElementById('carNowView');
     dataView.innerHTML = content;  
+    
+    for (i = 0; i < $(".fettle").length; i++) {
+        var carrepairdate = document.getElementsByClassName("carrepairdate")[i];
+        if (carrepairdate.innerText == "aN/aN") {
+        	carrepairdate.innerText="";
+        }
+    }
     }
     });
     }  
@@ -148,7 +177,7 @@ a{
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -176,11 +205,16 @@ a{
                 <input type="text"  id="changenote" value=${note}>
                 <input type="hidden"  id="changestatus" value=${status}>
             </div>
+            <p id="t1" >
+            <label >預定保養</label>
+            <br>
+            <input type="date" name="usr_date" id="carrepairdate">
+            <p>
             <hr>
             <div id='radio1'>
             <label for="pwd">車輛維修</label>
             <br>
-            	<input  type="radio" name="status" value="repair">是
+            	<input  type="radio" name="status" value="repair" >是
             	<input  type="radio" name="status" value="notRepair">否
         	</div>
             	<br>
@@ -190,6 +224,10 @@ a{
                 <input  type="radio" name="status" value="clear">是
                 <input  type="radio" name="status" value="notClear">否
             </div>	
+            
+            
+         		
+
             <br>
             <button type="button" id="revise" >修改</button>
             <button type="button" id="delete" >刪除</button>
@@ -205,11 +243,29 @@ a{
     	if ($('#changestatus').val() !== "維修保養") {
 		 $('#radio1').show();
 		 $('#radio2').hide();
+//*******************預計維護********************
+		 $('#t1').show(); 
+			var result = "";
+			 $(function() {
+				$("[name='status']:radio").click(function(e) {
+					result = $(this).val() ;
+			 	   if(result =='repair'){
+			 	    $('#t1').hide();
+			 	    $('#togetherT2').attr("required","required");
+			 	   }
+			 	  if(result =='notRepair'){
+				 	    $('#t1').show();
+				 	    $('#togetherT2').attr("required","required");
+				 }
+				 });
+         }); 
+//***************************************
 		 }	
 		 if ($('#changestatus').val() == "維修保養") {
 			 $('#radio1').hide();
 			 $('#radio2').show();
-			 }
+			 $('#t1').hide(); 
+		}
         
         $(function() {
             $('#revise').click(function(e) {
@@ -218,8 +274,8 @@ a{
                 var note= $('#changenote').val();
                 var car = $('#changecar').val(); 
                 var milage = $('#changemilage').val();
-                var fettle =  $("[name='status']:checked").val()
-                console.log(fettle);
+                var date = $('#carrepairdate').val();
+                var fettle =  $("[name='status']:checked").val();
                 if(fettle=='repair')
                 if (confirm('車輛維修保養會將登記資料刪除(請確認後在點擊)') == true) {
                 if(status){
@@ -229,6 +285,7 @@ a{
                     'note': note,   
                     'car': car,  
                     'fettle': fettle,
+                    'date': date,  
                     'action': 'resiveNote'
                 }      
                
@@ -245,6 +302,7 @@ a{
                             'milage': milage,
                             'note': note,   
                             'car': car,  
+                            'date': date,  
                             'fettle': fettle,
                             'action': 'resiveNote'
                         }      
@@ -258,7 +316,7 @@ a{
             function updateNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+            url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
             data: data,
             async:false,
             dataType: "JSON",
@@ -290,10 +348,6 @@ a{
                 var note= $('#changenote').val();
                 var car = $('#changecar').val(); 
                 var milage = $('#changemilage').val();
-                console.log(index);
-                console.log(note);
-                console.log(car);
-                console.log(milage);
                 var data = {
                     'index':index,
                     'milage': milage,
@@ -311,7 +365,7 @@ a{
         function deleteNote(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
         data: data,
         async:false,
         dataType: "JSON",
@@ -331,10 +385,6 @@ $(function() {
     var note= $('#note').val();
     var car = $('#car').val(); 
     var milage = $('#milage').val();
-   
-    console.log(note);
-    console.log(car);
-    console.log(milage);
     $('input').focus(function(){
     $(this).css('border','');
     });
@@ -356,7 +406,7 @@ $(function() {
  function createNote(data){
             $.ajax({
             type: "post",
-            url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+            url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
             data: data,
             async:false,
             dataType: "JSON",
@@ -371,6 +421,8 @@ $(function() {
             }
             });
             }
+ 
+
   </script>
 </body>
 </html>
