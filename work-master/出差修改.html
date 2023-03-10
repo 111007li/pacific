@@ -142,7 +142,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         function SendAllQuery(data){
             $.ajax({
               type: "post",
-              url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+              url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
               data: data,
               dataType: "JSON",
               success: function (response) {
@@ -240,9 +240,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             date = new Date(date.innerText);
             bdate = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate();
             aname = String(name.innerText);
-            
-            console.log(td)
-         	console.log(ctd)
+ 
             //大於今日才取消登記
             if ( td < ctd ) {
             	document.getElementsByClassName("leave")[i].innerHTML = "";
@@ -270,7 +268,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     	            };
     	            $.ajax({
     	              type: "post",
-    	              url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+    	              url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
     	              data: data,
     	              dataType: "JSON",
     	              success: function (response) {
@@ -290,7 +288,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -308,7 +306,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
                             <td>${car}</td>
                             <td>${location}</td>
                             <td>${together}</td>
-                            <td>${new Date(date).format("yyyy-MM-dd")}</td>
+                            <td id='date'>${new Date(date).format("yyyy-MM-dd")}</td>
                             <td>${new Date(time).format("hh:mm")}</td>
                             <td>${new Date(comeTime).format("hh:mm")}</td>
                             <td>${carOutward}</td>
@@ -353,6 +351,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         	$(function() {
             $('#comeCompanyBtn').click(function(e) {
                 var status = true;
+                var date =  $('#date').text();
                 var index = $('#changeIndex').val();
                 var carOutward =  $("[name='carOutward']:checked").val()
                 var getGas =  $("[name='getGas']:checked").val() 
@@ -366,11 +365,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 					status=false;
                 }
 				var cometime = new Date();
-				  var filltime = cometime.getFullYear() + "/"
-				                  + (cometime.getMonth() + 1) + "/"
-				                  + cometime.getDate() + "  "
-				                  + cometime.getHours()+ ":"
-				                  + cometime.getMinutes()
+				var cometime = new Date(date);
+				var today = new Date();
+  	  			var tH = today.getHours();
+  	  			if (tH.toString().length == 1) {
+  	  				tH = "0" + tH;
+  	 			}
+  	  			var tm = today.getMinutes();
+	  			if (tm.toString().length == 1) {
+	  				tm = "0" + tm;
+	 			}
+  	  			
+	  			 var filltime = cometime.getFullYear() + "/"
+                 + (cometime.getMonth() + 1) + "/"
+                 + cometime.getDate() + "  "
+                 + tH + ":"
+                 + tm
+                 
 				if(status){
 					if (confirm('請確認回公司人員是否正確') == true) {
 						var data = { 
@@ -395,7 +406,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     function updateStatusData(data){
         $.ajax({
           type: "post",
-          url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+          url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
           data: data,
           dataType: "JSON",
           success: function (response) {
@@ -415,7 +426,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
       };
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -538,7 +549,7 @@ function RehandleData(response) {
         function carNow(data){
         $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
         data: data,
         dataType: "JSON",
 		error: function (xhr) {
@@ -618,7 +629,7 @@ function RehandleData(response) {
      	function carTodayStatus(data){
    	    $.ajax({
    	    type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
    	    data: data,
    	    dataType: "JSON",
    	    success: function(response) { 
@@ -641,7 +652,7 @@ function RehandleData(response) {
      	function carDateStatus(data){
            $.ajax({
            type: "post",
-           url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+           url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
            data: data,
            dataType: "JSON",
            success: function(response) { 
@@ -746,7 +757,7 @@ function RehandleData(response) {
      function updateInputData(data){
       $.ajax({
         type: "post",
-        url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+        url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
         data: data,
         dataType: "JSON",
         success: function (response) {
@@ -775,7 +786,7 @@ function RehandleData(response) {
     function selection(selectdata){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+    url: "https://script.google.com/macros/s/AKfycbxEUS0OgvYwrhACGbNBfgi55zLHc7eaH7l11H-CxxCNT-bhXC2dZ-bqY4NbkPQQZjL3kQ/exec",
     data: selectdata,
     dataType: "JSON",
     success: function(response) { 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-tw">
 <head>
-  <script src="jq/jquery-3.6.1.js"></script>
+  <script src="../jq/jquery-3.6.1.js"></script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="">
@@ -58,11 +58,18 @@ a{
 </head>
 
 <body>    
-  <h1>更新日期</h1>
+  <div class="container">
+  <h1>車輛資料更換</h1>
+  <button type="button" id="todayupdate"  class="btn btn-primary">今日狀況更新</button>
+  <br>
+  <br>
+  <button type="button" id="delete"  class="btn btn-primary">非今日可使用資料刪除</button>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script>
-   
+  $(function() {
+      $('#todayupdate').click(function(e) {
     var cdata = {
         'action': 'changeDay'
         }
@@ -70,17 +77,43 @@ a{
     function carNow(data){
     $.ajax({
     type: "post",
-    url: "https://script.google.com/macros/s/AKfycbwsAQX7N1yyOjynIYwt4no0dvhc-lS0hqFNi7GwYnCiZmz7_5mUZqqMGKVurmrw5uCQ6A/exec",
+    url: "https://script.google.com/macros/s/AKfycbxcB3vhPpPWZ8shxT8Wcc_3ZdPDIXMJVCKhY2N9jkWfqr3LVURAzCQLWoU5iBZLpvHzoQ/exec",
     data: data,
     dataType: "JSON",
     success: function(response) { 
     	if(response === 'success'){
-            console.log('換日完成');
+    		alert('換日完成');
         } 
     }
     });
     }  
+      });
+  });
+  $(function() {
+      $('#delete').click(function(e) {
+   if (confirm('刪除會將舊可使用資料刪除(請確認後在點擊)') == true) {
+    var cdata = {
+    		'action': 'olddayDelete'
+        }
+    carNow(cdata);   
+    function carNow(data){
+    $.ajax({
+    type: "post",
+    url: "https://script.google.com/macros/s/AKfycbxcB3vhPpPWZ8shxT8Wcc_3ZdPDIXMJVCKhY2N9jkWfqr3LVURAzCQLWoU5iBZLpvHzoQ/exec",
+    data: data,
+    dataType: "JSON",
+    success: function(response) { 
+    	if(response === 'success'){
+    		alert('非今日資料已刪除');
+        } 
+    }
+    });
+    }  
+   }
     
+      });
+  });
+
   </script>
 </body>
 </html>
