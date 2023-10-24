@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <script src="jq/jquery-3.6.1.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>出差登記</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <style>
+  label{
+ font-size: 20px;
+}
+input{
+ font-size: 20px;
+}
+td{
+ font-size: 20px;
+}
+  th {
+ font-size: 20px;
+}
+select{
+ font-size: 20px;
+}
+option{
+ font-size: 20px;
+}
+    body {
+      padding-top: 54px;
+     
+    }
+  .div-left{width:300px;height:50px;float:left;text-align:left;} 
+ 
+  img {  
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    height: auto;
+}
+a{
+	margin: 10px;
+}
+    @media (min-width: 992px) {
+      body {
+        padding-top: 56px;
+      }
+    }
+    li{
+        padding: 1em;
+        text-align: left;
+    }
+    
+.wrap{ /*父元素*/
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+.left{
+    width: 70%;
+    height: 200px;
+}
+.right{
+    width: 60%;
+    height: 200px;
+}
+  </style>
+
+</head>
+
+<body>     
+<div class="container">
+<div class="col-lg-7 text-center">
+
+       <h1 class="mt-5">出差登記</h1> 
+       <a href="./出差修改.html">出差修改</a>
+<hr>  
+</div>
+</div> 
+
+<div class="wrap"><!--父元素-->
+<div class="left">
+        <div>
+        <ul  class="list-unstyled">
+            <li class="col-xs-8">
+            <!-- **********************************************************************  -->
+            <!-- HINO 第一輛車 -->
+                <img   src="./images/HINO RCK-3218.jpg" alt="" id="image">
+                <br>
+                <br>
+                <div id="carNote">
+             
+                <br>   
+                </div>
+								<table border="1"   class="table table-striped"  
+									style="border-collapse: collapse">
+									<thead>
+										<tr>
+											<th width="10%">車型</th>
+											<th width="10%">狀況</th>
+											<th width="10%">預定保養</th>
+										</tr>
+									</thead>
+									<tbody id="carStatusNowView">
+										<!-- 目前車況 -->
+									</tbody>
+								</table>
+			</li>
+        </ul>           
+        </div>
+</div>
+<div class="right">
+        <label >車型</label>
+        <div >
+                <select name="number"  data-price="50" data-name="鹹酥雞"  id="dd">
+                </select>
+        </div>     
+         <br>
+        
+        
+            <label for="pwd">出差日期</label>
+            <div >
+            <input type="date" name="usr_date" id="date">
+            <button type="button" id="checkDate">查看登記狀況</button>
+            </div>    
+         <br>
+        
+       
+            <label for="pwd">出差時間</label>
+             <div >
+            <input type="time" name="usr_time" id="time">
+        	</div>
+        <br>
+         
+       
+          <label for="pwd">使用者</label>
+           <div >
+           <input type="text"  id="name">
+           </div>
+        <br>
+         
+       
+          <label for="pwd">公務手機</label>
+          <div >
+				<select  id="phone">
+					<option value=" ">無</option>
+					<option value="85">85</option>
+					<option value="86">86</option>
+					<option value="87">87</option>
+					<option value="88">88</option>
+				</select>
+          </div>
+		 <br>
+			
+			
+          <label for="pwd">同行者</label>
+          <div >
+          	<textarea  id="together"></textarea>
+<!--           	<input type="text"  id="together"> -->
+          </div> 
+         <br>
+        
+        
+            <label for="pwd">預計回廠</label>
+            <div >
+            <input type="time" name="usr_time" id="cometime">  
+        	</div>     
+        <br>
+        
+        <div >
+          <label for="pwd">出差地</label>
+          <br>
+   		  <select  id="locationOrder" onchange='reprint()'>
+<!--           <option value= "其他" >其他</option> -->
+<!--           <option value= "KZ" >KZ</option> -->
+<!--           <option value= "WZ" >WZ</option> -->
+          </select>
+          <p id="original" >
+          	<input type="text"  id="location" >
+          </p>	
+               
+        </div>
+          <br>
+        <button type="button" id="sendOrder" class="btn btn-primary col-xs-3">預約</button>
+      
+</div>    
+</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+  <script>       
+  
+  Date.prototype.format =function(format){
+		var o = {
+			"M+" : this.getMonth()+1, 
+			"d+" : this.getDate(), 
+			"h+" : this.getHours(), 
+			"m+" : this.getMinutes(), 
+			"s+" : this.getSeconds(), 
+			"q+" : Math.floor((this.getMonth()+3)/3), 
+			"S" : this.getMilliseconds() 
+		}
+		if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+			(this.getFullYear()+"").substr(4- RegExp.$1.length));
+		for(var k in o)if(new RegExp("("+ k +")").test(format))
+			format = format.replace(RegExp.$1,
+				RegExp.$1.length==1? o[k] :
+					("00"+ o[k]).substr((""+ o[k]).length));
+		return format;
+      }
+  	
+  		var selectdata = {
+	        'action': 'locationSelection'
+	        }
+  		locationSelection(selectdata);         
+	    function locationSelection(selectdata){
+	    $.ajax({
+	    type: "post",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+	    data: selectdata,
+	    dataType: "JSON",
+	    success: function(response) { 
+	    var content = '';
+	    response.forEach(element => {
+	    var [location] = element.data;
+	    content +=
+	    `<option value= ${location} >${location}</option>`
+	    })
+	    var dataView = document.getElementById('locationOrder');
+	    dataView.innerHTML = content;
+	    }
+	    });
+	    }
+  	
+     var selectdata = {
+        'action': 'selection'
+        }
+    selection(selectdata);         
+    function selection(selectdata){
+    $.ajax({
+    type: "post",
+    url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+    data: selectdata,
+    dataType: "JSON",
+    success: function(response) { 
+    var content = '';
+    response.forEach(element => {
+    var [car] = element.data;
+    content +=
+    `<option value= ${car} >${car}</option>`
+    })
+    var dataView = document.getElementById('dd');
+    dataView.innerHTML = content;
+    }
+    });
+    }
+    
+    $(function(){
+        $('div[id =""]').hide();
+        $('#sel').change(function(){
+        let sltValue=$(this).val();
+        console.log(sltValue);
+        $('div[id =""]').show();
+        });
+        });
+    //*****************************************************
+        //根據備註的車名修改
+        $("#dd").change(function(){
+        switch ($(this).val()){
+        default:
+        case 'AA': 
+            var flag = "./images/未命名.jpg";
+            $("#image").attr("src",flag);
+            $("#sel2 option").remove();
+        break;
+        case 'TOWN': 
+        var flag = "./images/TOWN RDX-6318.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();
+        break;
+        
+        case 'CROSS': 
+        var flag = "./images/CROSS RDF-9718.jpg";
+        $("#image").attr("src",flag);
+        break;
+         
+        case "HINO": 
+        var flag = "./images/HINO RCK-3218.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+
+        case "SIENTA": 
+        var flag = "./images/SIENTA RDC-0718.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+             
+        case "YARIS": 
+        var flag = "./images/YARIS RDW-2018.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+   
+        case "CAMRY-2.5": 
+        var flag = "./images/CAMRY RFB-7918.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+
+        case "ALTIS-RDR": 
+        var flag = "./images/ALTIS RDR-5018.jpg";
+        $("#image").attr("src",flag);
+        $("#sel2 option").remove();    
+        break;
+
+        case "ALTIS-RDG": 
+        var flag = "./images/ALTIS RDG-1918.jpg";
+        $("#image").attr("src",flag);
+        $('#CarTitle').text('3月');
+        $('#carFettle').text('80000');
+        $("#sel2 option").remove();    
+        break;
+        }
+        });
+      //****************************************************************
+  </script>
+  <script>
+  $(function(){
+      var notedata = {
+          'car': 'HINO',
+          'action': 'noteSelection'    
+      }
+      sendNoteData(notedata)
+    });
+  $(function(){
+      $("#dd").change(function(e){
+      var status = true;  
+      order = $(this).val();       
+      var notedata = {
+          'car': order,
+          'action': 'noteSelection'    
+      }
+      sendNoteData(notedata)
+    });
+  });
+  function sendNoteData(data){
+    $.ajax({
+      type: "post",
+      url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+      data: data,
+      async:false,
+      dataType: "JSON",
+      success: function (response) {
+          var content = '';
+          response.forEach(element => {
+          var [car,mileage,month,fettle] = element.data;
+          content +=
+          `
+              <label style="font-size:18px;">保養里程: ${mileage}</label>
+              <br>
+          
+              <label style="font-size:18px;">備註: ${month}</label>
+              <br>  
+              <br>        
+          `
+          })
+          var dataView = document.getElementById('carNote');
+          dataView.innerHTML = content;
+          }
+      });
+  }
+  	
+ 	var cdata = {
+  			'action': 'carTodayStatus'
+	    }
+  	carTodayStatus(cdata);	
+  	 $(function(){
+       $('#checkDate').click(function(e){
+    	   var date = $('#date').val(); 
+    	   		var status = true;
+    	  		if(date == ''){
+    	          $('#date').css('border','1px solid #ff0000');
+    	          status = false;
+    	        }
+    	        newInputDate = new Date(date);
+    	        var nowDate = new Date();
+    	        nowDate = nowDate.setDate(nowDate.getDate()-1);
+    	        nowDate = new Date(nowDate);
+    	        var ndate = new Date();
+    	        ndate = ndate.setDate(ndate.getDate()+4);
+    	        ndate=new Date(ndate);
+    	        
+    	        var inputdate = new Date(date);
+    	        var todayDate = new Date();
+    	        adate = inputdate.getFullYear() + '-' + ( inputdate.getMonth() + 1) + '-' +  inputdate.getDate();
+    	        bdate = todayDate.getFullYear() + '-' + (todayDate.getMonth() + 1) + '-' + todayDate.getDate();
+    	        
+    	        if(newInputDate  < nowDate)
+    	        {   
+    	            alert('請輸入正確日期');
+    	            status = false;  
+    	        }else if(newInputDate  > ndate){
+    	        	alert('請輸入五日內日期');
+    	        	status = false;
+    	        }
+    	     	if(status){ 
+    	     		
+    	        if(adate == bdate){
+    	        	
+    	        	var cdata = {
+    	        		'date':date,
+    	    	        'action': 'carTodayStatus'
+    	    	    }
+    	        	carTodayStatus(cdata);
+    	        }
+    	        if(adate !== bdate){
+    	        	var cdata = {
+        	        	'date':date,
+        	    	    'action': 'carDateStatus'
+        	    	}
+    	        	carDateStatus(cdata);
+    	        } 
+    	     	}
+    	    
+    	     	
+       });
+     });
+  	function carTodayStatus(data){
+	    $.ajax({
+	    type: "post",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+	    data: data,
+	    dataType: "JSON",
+	    success: function(response) { 
+	    var content = '';
+	    response.forEach(element => {
+	    var [car,,,fettle,,,,,,,carrepairdate] = element.data;
+	    content +=
+	    `
+	    <tr>
+	    <td>${car}</td>
+	    <td class= 'fettle'>${fettle}</td>
+	    <td class= 'carrepairdate'>${new Date(carrepairdate).format("MM/dd")}</td>
+	    </tr>
+	    `
+	    })
+	    var dataView = document.getElementById('carStatusNowView');
+	    dataView.innerHTML = content;
+	    
+	    for (i = 0; i < $(".fettle").length; i++) {
+            var fettle = document.getElementsByClassName("fettle")[i];
+            var carrepairdate = document.getElementsByClassName("carrepairdate")[i];
+            if (fettle.innerText == "出差中" || fettle.innerText == "維修保養") {
+            	$(fettle).css("background-color", "red");
+            }
+            if (carrepairdate.innerText == "aN/aN") {
+            	carrepairdate.innerText="";
+            }
+        }
+	    
+	    }
+	    });
+	}   	 
+  	function carDateStatus(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+        data: data,
+        dataType: "JSON",
+        success: function(response) { 
+        if(response.length===0){alert('無登記車輛');}
+        var content = '';
+        response.forEach(element => {
+        var [car,,,,,,,,,fettle,carrepairdate] = element.data;
+        content +=
+        `
+        <tr>
+        <td>${car}</td>
+        <td class= 'fettle'>${fettle}</td>
+	    <td class= 'carrepairdate'>${new Date(carrepairdate).format("MM/dd")}</td>
+        </tr>
+        `
+        })
+        var dataView = document.getElementById('carStatusNowView');
+        dataView.innerHTML = content;
+        
+        for (i = 0; i < $(".fettle").length; i++) {
+            var fettle = document.getElementsByClassName("fettle")[i];
+            var carrepairdate = document.getElementsByClassName("carrepairdate")[i];
+            if (fettle.innerText == "出差中" || fettle.innerText == "維修保養") {
+            	$(fettle).css("background-color", "red");
+            }
+            if (carrepairdate.innerText == "aN/aN") {
+            	carrepairdate.innerText="";
+            }
+        }
+        
+        }
+        });
+        }  
+  		
+     $(function(){
+        $('#sendOrder').click(function(e){
+        var status = true;
+        var name = $('#name').val();
+        var phone ='';
+        var date = $('#date').val(); 
+        var time = $('#time').val(); 
+        var location = '' ;
+        var together = $('#together').val();
+        var cometime = $('#cometime').val(); 
+        var order = '';
+        var locationOrder = '';
+        $('input').focus(function(){
+          $(this).css('border','');
+        });
+        
+        $('#dd').each(function(index) {
+          if($(this).val() !== ''){
+            order += $(this).val();       
+          }
+        });
+        $('#phone').each(function(index) {
+            if($(this).val() !== ''){
+              phone += $(this).val();       
+            }
+          });
+        
+        if(time == ''){
+          $('#time').css('border','1px solid #ff0000');
+          status = false;
+        }
+        if(date == ''){
+          $('#date').css('border','1px solid #ff0000');
+          status = false;
+        }
+        newInputDate = new Date(date);
+        var nowDate = new Date();
+        nowDate = nowDate.setDate(nowDate.getDate()-1);
+        nowDate = new Date(nowDate);
+        var ndate = new Date();
+        ndate = ndate.setDate(ndate.getDate()+4);
+        ndate=new Date(ndate);
+       
+        
+        if(newInputDate  < nowDate)
+        {   
+            alert('請輸入正確日期');
+            status = false;  
+        }else if(newInputDate  > ndate){
+        	alert('請輸入五日內日期');
+        	status = false;
+        }
+      
+        if(cometime == ''){
+          $('#cometime').css('border','1px solid #ff0000');
+          status = false;
+        }
+        if(name == ''){
+          $('#name').css('border','1px solid #ff0000');
+          status = false;
+        }
+        
+        $('#locationOrder').each(function(index) {
+            if($(this).val() !== ''){
+            	locationOrder = $(this).val();   
+            }
+            if($(this).val() == '其他'){
+            	$('#original').show();
+        	    $('#originallink').attr("required","required");
+            }else{
+        	    $('#original').hide();
+        	    $('#originallink').removeAttr("required");
+        	}
+        });
+        
+        if(locationOrder !== ''){
+        	var c = $('#location').val();  
+            if(locationOrder == '其他'){
+            if(c !== ''){
+            	location = $('#location').val(); 
+            	}else{
+                     $('#location').css('border','1px solid #ff0000');
+                     status = false;
+            	}
+           	  }
+       		
+            if(locationOrder !== '其他'){
+            	location = locationOrder
+            }
+        }
+        
+     	console.log(location);
+     	console.log(locationOrder);
+
+        if(status){ 
+          var currentdate = new Date();
+          var filltime = currentdate.getFullYear() + "/"
+                  + (currentdate.getMonth() + 1) + "/"
+                  + currentdate.getDate() + "  "
+                  + time
+          var cometime = currentdate.getFullYear() + "/"
+                  + (currentdate.getMonth() + 1) + "/"
+                  + currentdate.getDate() + "  "
+                  + cometime	      
+          var data = {
+            'name':name,
+            'phone':phone,
+            'date':date,
+            'time':filltime,
+            'cometime':cometime,
+            'car':order,
+            'location': location,
+            'together':together,
+            'fettle':"已登記",
+          }
+          send(data);
+        }
+      });
+    });
+    function send(data){
+      $.ajax({
+        type: "get",
+        url: "https://script.google.com/macros/s/AKfycbx38IunsxvLz2BS4LnnMfRfP64qw7EUSiJY674EXvlontQPza40ymIUkM-M31HnAnwinQ/exec",
+        data: data,
+        dataType: "JSON",
+        error: function (xhr) {
+        	
+        	alert(xhr.responseText);
+        }, 
+        success: function (response) {
+        if(response == true){
+            alert('登記車輛');
+            window.location.reload(); 
+          } 
+        if(response == false){
+        	alert('車輛已被登記請選擇其他車型');
+        }
+    
+        }
+      });
+    }   
+    
+    function reprint(){
+    	   var locationOrder = $('#locationOrder').val();
+    	   if(locationOrder=='其他'){
+    	    $('#original').show();
+    	    $('#originallink').attr("required","required");
+    	   }else{
+    	    $('#original').hide();
+    	    $('#originallink').removeAttr("required");
+    	   }
+    	  }
+    
+    
+   
+  </script>
+</body>
+</html>

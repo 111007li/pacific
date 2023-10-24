@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-tw">
+<head>
+  <script src="jq/jquery-3.6.1.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <title>備註更改</title>
+  <!-- Bootstrap core CSS -->
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom styles for this template -->
+  <style>
+    label{
+ font-size: 18px;
+}
+input{
+ font-size: 18px;
+}
+td{
+ font-size: 18px;
+}
+  th {
+ font-size: 18px;
+}
+select{
+ font-size: 18px;
+}
+option{
+ font-size: 18px;
+}
+    body {
+      padding-top: 54px;
+     
+    }
+  .div-left{width:300px;height:50px;float:left;text-align:left;} 
+
+  img {  
+    max-height: 100%;  
+    max-width: 100%; 
+    width: auto;
+    height: auto;
+}
+a{
+	margin: 10px;
+}
+    @media (min-width: 992px) {
+      body {
+        padding-top: 56px;
+      }
+    }
+    li{
+        padding: 1em;
+        text-align: left;
+    }
+    
+.wrap{ /*父元素*/
+    width: 100%;
+    height: 200px;
+    display: flex;
+    justify-content: space-between;
+}
+.left{
+
+    width: 60%;
+   
+}
+.right{
+ 
+    width: 40%;
+  
+}
+  </style>
+
+</head>
+
+<body>    
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12 text-center">
+        <h1 class="mt-5">備註更改</h1> 
+        
+       <a  href="./出差地管理.html">出差地管理</a>
+<hr>  
+
+<div class="wrap">
+    <div class="left">
+        <div style="text-align:left;" class="form-group col-xs-10">
+            <table width="160%" class="table table-striped"  style="border-collapse:collapse" >
+                <thead>
+                    <tr>
+                        <th >車型</th>
+                        <th >里程數</th>
+                        <th >備註</th>
+                    	<th >狀態</th>
+                    	<th >預定保養</th>
+                    </tr>
+                </thead>
+                <tbody id="carNowView">
+
+                </tbody>
+            </table>
+        </div>   
+    </div>
+    <div class="right">
+        <div style="text-align:left;" class="form-group col-xs-6" id="note1">
+            <div>
+                <label >車型</label>
+                <br>
+                <input type="text" id="car">
+            </div>                
+            <div  >
+                <label for="pwd">里程數</label>
+                <br>
+                <input type="text" id="milage">
+            </div>
+            <div >
+                <label for="pwd">備註</label>
+                <br>
+                <input type="text"  id="note">
+            </div>
+            <br>
+            <button type="button" id="create" >新增</button>
+        </div>
+    </div>
+</div><!--wrap-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script>
+  
+  Date.prototype.format =function(format){
+		var o = {
+			"M+" : this.getMonth()+1, 
+			"d+" : this.getDate(), 
+			"h+" : this.getHours(), 
+			"m+" : this.getMinutes(), 
+			"s+" : this.getSeconds(), 
+			"q+" : Math.floor((this.getMonth()+3)/3), 
+			"S" : this.getMilliseconds() 
+		}
+		if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+			(this.getFullYear()+"").substr(4- RegExp.$1.length));
+		for(var k in o)if(new RegExp("("+ k +")").test(format))
+			format = format.replace(RegExp.$1,
+				RegExp.$1.length==1? o[k] :
+					("00"+ o[k]).substr((""+ o[k]).length));
+		return format;
+      }
+  
+    var cdata = {
+        'action': 'carTodayStatus'
+        }
+    carNow(cdata);   
+    function carNow(data){
+    $.ajax({
+    type: "post",
+    url: "https://script.google.com/macros/s/AKfycbwvuMtJfaCwoJAFy8wCw8V_LINmHSk13EuxXM04Tjmqv-KwNGN6yAKUVbRPy7b5lk0NBA/exec",
+    data: data,
+    dataType: "JSON",
+    success: function(response) { 
+    var content = '';
+    response.forEach(element => {
+    var [car,milage,note,status,,,,,,,carrepairdate] = element.data;
+    var index = element.index;
+    content +=
+    `
+    <tr>
+    <td > ${car} </td>
+    <td > ${milage} </td>
+    <td > ${note} </td>
+    <td class= 'fettle'> ${status} </td>
+    <td class= 'carrepairdate'> ${new Date(carrepairdate).format("MM/dd")} </td>
+    <td > <button type="button" onclick="updateNoteData(${index}, this)" id="set">變更</button></td>
+    </tr>
+    `
+    })
+    var dataView = document.getElementById('carNowView');
+    dataView.innerHTML = content;  
+    
+    for (i = 0; i < $(".fettle").length; i++) {
+        var carrepairdate = document.getElementsByClassName("carrepairdate")[i];
+        if (carrepairdate.innerText == "aN/aN") {
+        	carrepairdate.innerText="";
+        }
+    }
+    }
+    });
+    }  
+    
+    function updateNoteData(index, that){
+      var data = {
+        action: 'changeNote',
+        index: index-1,
+      };
+      $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbwvuMtJfaCwoJAFy8wCw8V_LINmHSk13EuxXM04Tjmqv-KwNGN6yAKUVbRPy7b5lk0NBA/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function(response) { 
+        var content = '';
+        response.forEach(element => {
+        var [car,milage,note,status] = element.data;
+        var index = element.index;
+        content +=
+        `
+        <input type=hidden id="changeindex" value=${index} >
+        <div>
+                <label >車型</label>
+                <br>
+                <input type="text" id="changecar" value=${car} >
+            </div>                
+            <div  >
+                <label for="pwd">里程數</label>
+                <br>
+                <input type="text" id="changemilage" value=${milage}>
+            </div>
+            <div >
+                <label for="pwd">備註</label>
+                <br>
+                <input type="text"  id="changenote" value=${note}>
+                <input type="hidden"  id="changestatus" value=${status}>
+            </div>
+            <div >
+            <label for="pwd">備註</label>
+            <br>
+            <input type="text"  id="status" value=${status}>
+        	</div>
+            <p id="t1" >
+            <label >預定保養</label>
+            <br>
+            <input type="date" name="usr_date" id="carrepairdate">
+            <p>
+            <hr>
+            <div id='radio1'>
+            <label for="pwd">車輛維修</label>
+            <br>
+            	<input  type="radio" name="status" value="repair" >是
+            	<input  type="radio" name="status" value="notRepair">否
+        	</div>
+            	<br>
+            <div id='radio2'>
+            <label for="pwd">維修完畢</label>
+                <br>
+                <input  type="radio" name="status" value="clear">是
+                <input  type="radio" name="status" value="notClear">否
+            </div>	
+
+            <br>
+            <button type="button" id="revise" >修改</button>
+            <button type="button" id="delete" >刪除</button>
+            <button type="button" id="cancel" >取消</button>
+            <p class='show'></p>
+        </div>
+        `
+        })
+        var dataView = document.getElementById('note1');
+        dataView.innerHTML = content; 
+        
+     	//維護保養
+    	if ($('#changestatus').val() !== "維修保養") {
+		 $('#radio1').show();
+		 $('#radio2').hide();
+//*******************預計維護********************
+		 $('#t1').show(); 
+			var result = "";
+			 $(function() {
+				$("[name='status']:radio").click(function(e) {
+					result = $(this).val() ;
+			 	   if(result =='repair'){
+			 	    $('#t1').hide();
+			 	    $('#togetherT2').attr("required","required");
+			 	   }
+			 	  if(result =='notRepair'){
+				 	    $('#t1').show();
+				 	    $('#togetherT2').attr("required","required");
+				 }
+				 });
+         }); 
+//***************************************
+		 }	
+		 if ($('#changestatus').val() == "維修保養") {
+			 $('#radio1').hide();
+			 $('#radio2').show();
+			 $('#t1').hide(); 
+		}
+        
+        $(function() {
+            $('#revise').click(function(e) {
+                var status = true;
+                var index = $('#changeindex').val();
+                var note= $('#changenote').val();
+                var car = $('#changecar').val(); 
+                var milage = $('#changemilage').val();
+                var date = $('#carrepairdate').val();
+                
+                var fff = $('#status').val();
+                
+                var fettle =  $("[name='status']:checked").val();
+                if(fettle=='repair')
+                if (confirm('車輛維修保養會將登記資料刪除(請確認後在點擊)') == true) {
+                if(status){
+                var data = {
+                    'index':index,
+                    'milage': milage,
+                    'note': note,   
+                    'car': car,  
+                    'fettle': fettle,
+                    'date': date,  
+                    'fff':fff,
+                    'action': 'resiveNote'
+                }      
+               
+                updateNote(data)
+                setTimeout(function(){window.location.reload();}, 2000);
+                }
+                }
+                
+                if(fettle !=='repair')
+                {
+                	if(status){
+                        var data = {
+                            'index':index,
+                            'milage': milage,
+                            'note': note,   
+                            'car': car,  
+                            'date': date,  
+                            'fettle': fettle,
+                            'fff':fff,
+                            'action': 'resiveNote'
+                        }      
+                        updateNote(data)
+                        setTimeout(function(){window.location.reload();}, 2000);
+                	 }
+                }
+                
+            });
+            }); 
+            function updateNote(data){
+            $.ajax({
+            type: "post",
+            url: "https://script.google.com/macros/s/AKfycbwvuMtJfaCwoJAFy8wCw8V_LINmHSk13EuxXM04Tjmqv-KwNGN6yAKUVbRPy7b5lk0NBA/exec",
+            data: data,
+            async:false,
+            dataType: "JSON",
+            success: function (response) {
+            if(response === 'success'){
+                alert('修改成功');
+                } 
+            if(response === 'false'){
+                alert('車型請勿重複');
+             }
+            }
+            });
+            }
+            $(function() {
+            $('#cancel').click(function(e) {    
+            window.location.reload()
+            });
+            });
+            
+        }
+        });
+      
+        
+
+        $(function(){ 
+        $('#delete').click(function(e) {
+            if (confirm('確定刪除備註') == true) {
+                var index = $('#changeindex').val();
+                var note= $('#changenote').val();
+                var car = $('#changecar').val(); 
+                var milage = $('#changemilage').val();
+                var data = {
+                    'index':index,
+                    'milage': milage,
+                    'note': note,   
+                    'car': car,  
+                    'action': 'deleteNote'
+                }      
+                deleteNote(data);
+                setTimeout(function(){window.location.reload();}, 2000);
+            } else {
+                alert('取消刪除');
+            }
+        });
+        });
+        function deleteNote(data){
+        $.ajax({
+        type: "post",
+        url: "https://script.google.com/macros/s/AKfycbwvuMtJfaCwoJAFy8wCw8V_LINmHSk13EuxXM04Tjmqv-KwNGN6yAKUVbRPy7b5lk0NBA/exec",
+        data: data,
+        async:false,
+        dataType: "JSON",
+        success: function (response) {
+        if(response === 'success'){
+                alert('刪除成功');
+                } else {
+                alert('請輸入正確車型');
+                }
+                }
+        });
+        }    
+    }
+$(function() {
+    $('#create').click(function(e) {   
+    var status = true;
+    var note= $('#note').val();
+    var car = $('#car').val(); 
+    var milage = $('#milage').val();
+    $('input').focus(function(){
+    $(this).css('border','');
+    });
+    if(car == ''){
+    $('#car').css('border','1px solid #ff0000');
+    status = false;
+    }
+    if(status){
+    var data = {
+    'milage': milage,
+    'note': note,   
+    'car': car,  
+    'action': 'createNote'
+    }      
+    createNote(data)
+    }
+    });
+ });     
+ function createNote(data){
+            $.ajax({
+            type: "post",
+            url: "https://script.google.com/macros/s/AKfycbwvuMtJfaCwoJAFy8wCw8V_LINmHSk13EuxXM04Tjmqv-KwNGN6yAKUVbRPy7b5lk0NBA/exec",
+            data: data,
+            async:false,
+            dataType: "JSON",
+            success: function (response) {
+            if(response === 'success'){
+                alert('新增成功');
+                setTimeout(function(){window.location.reload();}, 2000);
+                } 
+            if(response === 'false'){
+            	alert('車型請勿重複');
+            }
+            }
+            });
+            }
+ 
+
+  </script>
+</body>
+</html>
